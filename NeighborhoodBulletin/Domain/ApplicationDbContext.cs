@@ -11,9 +11,12 @@ namespace Domain
     {
         public class ApplicationUser : IdentityUser
         {
-
         }
-
+        public DbSet<Neighbor> Neighbors { get; set; }
+        public DbSet<ShopOwner> ShopOwners { get; set; }
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Update> Updates { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

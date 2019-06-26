@@ -5,11 +5,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NeighborhoodBulletin.Models;
+using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace NeighborhoodBulletin.Controllers
 {
     public class HomeController : Controller
     {
+
         public IActionResult Index()
         {
             return View();
