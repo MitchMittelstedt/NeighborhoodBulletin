@@ -1,0 +1,60 @@
+﻿@model Domain.Update
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Update</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopOwner)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShopOwner.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubmitButton)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubmitButton)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EditButton)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EditButton)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DeleteButton)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DeleteButton)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Like)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Like)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Reply)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Reply)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

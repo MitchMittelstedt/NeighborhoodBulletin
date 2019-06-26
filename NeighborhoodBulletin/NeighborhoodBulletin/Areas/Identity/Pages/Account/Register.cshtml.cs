@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using static Domain.ApplicationDbContext;
 using NeighborhoodBulletin.Areas.Identity.Pages.Account.Manage;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Domain;
 
 namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
 {
@@ -98,7 +99,15 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
                     {
                         await _roleManager.CreateAsync(new IdentityRole(StaticDetails.AdminEndUser));
                     }
-                    if (!await _roleManager.RoleExistsAsync())
+                    if (!await _roleManager.RoleExistsAsync(StaticDetails.Neighbor))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Neighbor));
+                    }
+                    if (!await _roleManager.RoleExistsAsync(StaticDetails.ShopOwner))
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.ShopOwner));
+                    }
+
                 }
                 foreach (var error in result.Errors)
                 {
