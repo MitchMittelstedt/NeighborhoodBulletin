@@ -82,7 +82,15 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                //    var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    Role = Input.Role,
+                };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -90,7 +98,7 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
                     {
                         await _roleManager.CreateAsync(new IdentityRole(StaticDetails.AdminEndUser));
                     }
-
+                    if (!await _roleManager.RoleExistsAsync())
                 }
                 foreach (var error in result.Errors)
                 {

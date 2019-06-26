@@ -15,6 +15,7 @@ namespace NeighborhoodBulletin.Controllers
 
         public IActionResult Index()
         {
+
             return View();
         }
 

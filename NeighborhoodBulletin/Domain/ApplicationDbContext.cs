@@ -11,6 +11,7 @@ namespace Domain
     {
         public class ApplicationUser : IdentityUser
         {
+            public virtual string Role { get; set; }
         }
         public DbSet<Neighbor> Neighbors { get; set; }
         public DbSet<ShopOwner> ShopOwners { get; set; }
