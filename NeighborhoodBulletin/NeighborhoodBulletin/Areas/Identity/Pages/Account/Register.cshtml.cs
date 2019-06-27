@@ -19,18 +19,18 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<ApplicationRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -97,15 +97,15 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
                 {
                     if (!await _roleManager.RoleExistsAsync(StaticDetails.AdminEndUser))
                     {
-                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.AdminEndUser));
+                        await _roleManager.CreateAsync(new ApplicationRole(StaticDetails.AdminEndUser));
                     }
                     if (!await _roleManager.RoleExistsAsync(StaticDetails.Neighbor))
                     {
-                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.Neighbor));
+                        await _roleManager.CreateAsync(new ApplicationRole(StaticDetails.Neighbor));
                     }
                     if (!await _roleManager.RoleExistsAsync(StaticDetails.ShopOwner))
                     {
-                        await _roleManager.CreateAsync(new IdentityRole(StaticDetails.ShopOwner));
+                        await _roleManager.CreateAsync(new ApplicationRole(StaticDetails.ShopOwner));
                     }
 
                 }
@@ -116,7 +116,7 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
-            return Page();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

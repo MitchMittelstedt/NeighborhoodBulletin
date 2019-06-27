@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using NeighborhoodBulletin.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Domain;
 
 namespace NeighborhoodBulletin
 {
@@ -37,10 +38,11 @@ namespace NeighborhoodBulletin
             services.AddDbContext<Domain.ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<Domain.ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+    
 
 
 
@@ -49,7 +51,7 @@ namespace NeighborhoodBulletin
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {

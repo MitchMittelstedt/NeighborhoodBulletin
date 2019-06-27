@@ -1,8 +1,12 @@
 ﻿@page
 @model RegisterModel
-@{
+@*@{
     ViewData["Title"] = "Register";
-}
+    List<SelectListItem> roles = new List<SelectListItem>();
+    roles.Add(new SelectListItem() { Text = "Neighbor", Value = "Neighbor" });
+    roles.Add(new SelectListItem() { Text = "Shop Owner", Value = "ShopOwner" });
+    ViewBag.roles = roles;
+}*@
 
 <h2>@ViewData["Title"]</h2>
 
@@ -30,7 +34,9 @@
             <div class="form-group">
                 <select asp-for="Input.Role" asp-items="@Model.UserRoles"></select>
             </div>
-            <button type="submit" class="btn btn-default">Register</button>
+            <div>
+                <button type="submit" class="btn btn-default">Register</button>
+            </div>
         </form>
     </div>
 </div>

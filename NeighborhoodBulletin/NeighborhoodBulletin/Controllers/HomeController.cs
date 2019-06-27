@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NeighborhoodBulletin.Models;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -21,7 +21,6 @@ namespace NeighborhoodBulletin.Controllers
             _context = context;
         }
 
-        [HttpGet]
         public IActionResult Index()
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -32,11 +31,11 @@ namespace NeighborhoodBulletin.Controllers
             }
             if(user.Role == "Neighbor")
             {
-                return RedirectToAction("Index", "Neighbors");
+                return RedirectToAction("Index", "Messages");
             }
             if(user.Role == "Shop Owner")
             {
-                return RedirectToAction("Index", "ShopOwner");
+                return RedirectToAction("Index", "Updates");
             }
             return View();
         }

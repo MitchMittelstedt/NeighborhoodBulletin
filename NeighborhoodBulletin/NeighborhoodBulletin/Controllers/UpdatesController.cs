@@ -21,6 +21,7 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Updates
         public async Task<IActionResult> Index()
         {
+
             var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
             return View(await applicationDbContext.ToListAsync());
         }
