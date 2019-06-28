@@ -9,7 +9,7 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account.Manage
     {
         public const string AdminEndUser = "Admin";
         public const string Neighbor = "Neighbor";
-        public const string ShopOwner = "Shop Owner";
+        public const string ShopOwner = "ShopOwner";
 
     }
 }

@@ -7,7 +7,7 @@ namespace Domain
 {
     public class ApplicationUser : IdentityUser
     {
-        public ApplicationUser() : base() { }
+        //public ApplicationUser() : base() { }
         public virtual string Role { get; set; }
     }
 }

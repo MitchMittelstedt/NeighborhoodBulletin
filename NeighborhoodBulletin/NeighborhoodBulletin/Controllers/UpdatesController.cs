@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -21,9 +22,11 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Updates
         public async Task<IActionResult> Index()
         {
-
-            var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
+            var messages = _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id);
+            //var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
+            return View(await messages.ToListAsync());
         }
 
         // GET: Updates/Details/5
@@ -57,10 +60,14 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ShopOwnerId,Text,SubmitButton,EditButton,DeleteButton,Like,Reply")] Update update)
+        public async Task<IActionResult> Create([Bind("Id,Text")] Update update)
         {
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
+                update.ShopOwnerId = shopOwner.Id;
+                update.DateTime = DateTime.Now;
                 _context.Add(update);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

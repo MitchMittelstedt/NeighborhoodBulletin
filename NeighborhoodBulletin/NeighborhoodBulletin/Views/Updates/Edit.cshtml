@@ -23,41 +23,7 @@
                 <input asp-for="Text" class="form-control" />
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="SubmitButton" /> @Html.DisplayNameFor(model => model.SubmitButton)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="EditButton" /> @Html.DisplayNameFor(model => model.EditButton)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="DeleteButton" /> @Html.DisplayNameFor(model => model.DeleteButton)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Like" /> @Html.DisplayNameFor(model => model.Like)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Reply" /> @Html.DisplayNameFor(model => model.Reply)
-                    </label>
-                </div>
-            </div>
+           
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>

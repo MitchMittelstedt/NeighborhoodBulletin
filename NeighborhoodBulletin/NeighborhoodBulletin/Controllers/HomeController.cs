@@ -33,7 +33,7 @@ namespace NeighborhoodBulletin.Controllers
             {
                 return RedirectToAction("Index", "Messages");
             }
-            if(user.Role == "Shop Owner")
+            if(user.Role == "ShopOwner")
             {
                 return RedirectToAction("Index", "Updates");
             }

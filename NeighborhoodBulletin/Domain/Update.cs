@@ -14,11 +14,7 @@ namespace Domain
         public int ShopOwnerId { get; set; }
         public virtual ShopOwner ShopOwner { get; set; }
         public string Text { get; set; }
-        public bool SubmitButton { get; set; }
-        public bool EditButton { get; set; }
-        public bool DeleteButton { get; set; }
-        public bool Like { get; set; }
-        public bool Reply { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }

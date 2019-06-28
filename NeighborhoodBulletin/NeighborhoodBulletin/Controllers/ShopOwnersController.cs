@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
+    //[Authorize(Roles = "ShopOwner")]
     public class ShopOwnersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +26,6 @@ namespace NeighborhoodBulletin.Controllers
         {
             var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
             return View(await applicationDbContext.ToListAsync());
-
         }
 
         // GET: ShopOwners/Details/5
@@ -57,13 +59,15 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ZipCode,BusinessName,ApplicationUserId")] ShopOwner shopOwner)
+        public async Task<IActionResult> Create([Bind("Id,Address,City,State,ZipCode,BusinessName,ApplicationUserId")] ShopOwner shopOwner)
         {
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                shopOwner.ApplicationUserId = userId;
                 _context.Add(shopOwner);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Updates");
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", shopOwner.ApplicationUserId);
             return View(shopOwner);

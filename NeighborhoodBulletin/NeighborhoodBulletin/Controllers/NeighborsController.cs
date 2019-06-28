@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
+    //[Authorize(Roles = "Neighbor")]
     public class NeighborsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -60,9 +63,11 @@ namespace NeighborhoodBulletin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                neighbor.ApplicationUserId = userId;
                 _context.Add(neighbor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Messages");
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
             return View(neighbor);

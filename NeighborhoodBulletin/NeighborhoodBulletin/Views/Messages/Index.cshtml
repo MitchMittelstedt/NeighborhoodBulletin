@@ -12,26 +12,11 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.Neighbor)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmitButton)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EditButton)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeleteButton)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Like)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reply)
             </th>
             <th></th>
         </tr>
@@ -39,26 +24,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Neighbor.Id)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmitButton)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EditButton)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeleteButton)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Like)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reply)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

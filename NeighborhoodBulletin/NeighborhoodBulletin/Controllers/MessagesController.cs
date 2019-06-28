@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -21,8 +22,11 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Messages
         public async Task<IActionResult> Index()
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            var message = _context.Messages.Where(m => m.Neighbor.ZipCode == neighbor.ZipCode); 
             var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await message.ToListAsync());
         }
 
         // GET: Messages/Details/5
@@ -56,10 +60,15 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,NeighborId,Text,SubmitButton,EditButton,DeleteButton,Like,Reply")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Text")] Message message)
         {
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+                message.NeighborId = neighbor.Id;
+                message.Neighbor.ZipCode = neighbor.ZipCode;
+                message.DateTime = DateTime.Now;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -74,7 +74,7 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
             UserRoles = new List<SelectListItem>()
             {
                 new SelectListItem { Value = "ShopOwner", Text = "Shop Owner" },
-                new SelectListItem {Value = "Neighbor", Text = "Neighbor" },
+                new SelectListItem { Value = "Neighbor", Text = "Neighbor" },
             }; 
         }
 
@@ -102,19 +102,28 @@ namespace NeighborhoodBulletin.Areas.Identity.Pages.Account
                     if (!await _roleManager.RoleExistsAsync(StaticDetails.Neighbor))
                     {
                         await _roleManager.CreateAsync(new ApplicationRole(StaticDetails.Neighbor));
+
                     }
                     if (!await _roleManager.RoleExistsAsync(StaticDetails.ShopOwner))
                     {
                         await _roleManager.CreateAsync(new ApplicationRole(StaticDetails.ShopOwner));
                     }
-
+                    await _signInManager.SignInAsync(user, isPersistent: false);
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                if(user.Role == "ShopOwner")
+                {
+                    return RedirectToAction("Create", "ShopOwners");
+                }
+                if(user.Role == "Neighbor")
+                {
+                    return RedirectToAction("Create", "Neighbors");
+                }
             }
-
             // If we got this far, something failed, redisplay form
             return RedirectToAction("Index", "Home");
         }
