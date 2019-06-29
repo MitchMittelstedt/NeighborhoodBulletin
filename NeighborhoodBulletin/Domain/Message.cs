@@ -13,6 +13,7 @@ namespace Domain
         [ForeignKey("Neighbor")]
         public int NeighborId { get; set; }
         public virtual Neighbor Neighbor { get; set; }
+        public int ZipCode { get; set; }
         public string Text { get; set; }
         public DateTime DateTime { get; set; }
 

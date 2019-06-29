@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NeighborhoodBulletin.Data;
+
 
 [assembly: HostingStartup(typeof(NeighborhoodBulletin.Areas.Identity.IdentityHostingStartup))]
 namespace NeighborhoodBulletin.Areas.Identity

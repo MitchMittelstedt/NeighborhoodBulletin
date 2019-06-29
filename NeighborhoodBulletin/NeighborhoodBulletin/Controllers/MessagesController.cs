@@ -24,7 +24,8 @@ namespace NeighborhoodBulletin.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
-            var message = _context.Messages.Where(m => m.Neighbor.ZipCode == neighbor.ZipCode); 
+            //var message = _context.Messages.WHere(m => m.Neighbor.ZipCode == neighbor.ZipCode);
+            var message = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode); 
             var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
             return View(await message.ToListAsync());
         }
@@ -67,7 +68,7 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 message.NeighborId = neighbor.Id;
-                message.Neighbor.ZipCode = neighbor.ZipCode;
+                message.ZipCode = neighbor.ZipCode;
                 message.DateTime = DateTime.Now;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
