@@ -22,7 +22,7 @@ namespace NeighborhoodBulletin.Controllers
 
         // GET: Messages
         public async Task<IActionResult> Index()
-        {
+         {
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
