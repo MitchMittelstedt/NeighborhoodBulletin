@@ -6,29 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
-    //[Authorize(Roles = "Neighbor")]
-    public class NeighborsController : Controller
+    public class ShopHashtagsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public NeighborsController(ApplicationDbContext context)
+        public ShopHashtagsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Neighbors
+        // GET: ShopHashtags
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Neighbors.Include(n => n.ApplicationUser);
+            var applicationDbContext = _context.ShopHashtags.Include(s => s.ShopOwner);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Neighbors/Details/5
+        // GET: ShopHashtags/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,44 +34,51 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors
-                .Include(n => n.ApplicationUser)
+            var shopHashtag = await _context.ShopHashtags
+                .Include(s => s.ShopOwner)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (neighbor == null)
+            if (shopHashtag == null)
             {
                 return NotFound();
             }
 
-            return View(neighbor);
+            return View(shopHashtag);
         }
 
-        // GET: Neighbors/Create
+        // GET: ShopHashtags/Create
         public IActionResult Create()
         {
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id");
             return View();
         }
 
-        // POST: Neighbors/Create
+        // POST: ShopHashtags/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ZipCode,Username,Hashtags,ApplicationUserId")] Neighbor neighbor)
+        public async Task<IActionResult> Create([Bind("Id,Text,ShopOwnerId")] ShopHashtag shopHashtag)
         {
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                neighbor.ApplicationUserId = userId;
-                _context.Add(neighbor);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Hashtags");
+                var shopOwner = _context.ShopOwners.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+                var shopHashtagTexts = shopHashtag.Text.Split(",").ToList();
+                foreach(var s in shopHashtagTexts)
+                {
+                    ShopHashtag newShopHashtag = new ShopHashtag();
+                    newShopHashtag.ShopOwnerId = shopOwner.Id;
+                    newShopHashtag.Text = s;
+                    _context.Add(newShopHashtag);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction("Index", "Home");
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id", shopHashtag.ShopOwnerId);
+            return View(shopHashtag);
         }
 
-        // GET: Neighbors/Edit/5
+        // GET: ShopHashtags/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,23 +86,23 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors.FindAsync(id);
-            if (neighbor == null)
+            var shopHashtag = await _context.ShopHashtags.FindAsync(id);
+            if (shopHashtag == null)
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id", shopHashtag.ShopOwnerId);
+            return View(shopHashtag);
         }
 
-        // POST: Neighbors/Edit/5
+        // POST: ShopHashtags/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ZipCode,Username,ApplicationUserId")] Neighbor neighbor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,ShopOwnerId")] ShopHashtag shopHashtag)
         {
-            if (id != neighbor.Id)
+            if (id != shopHashtag.Id)
             {
                 return NotFound();
             }
@@ -106,12 +111,12 @@ namespace NeighborhoodBulletin.Controllers
             {
                 try
                 {
-                    _context.Update(neighbor);
+                    _context.Update(shopHashtag);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NeighborExists(neighbor.Id))
+                    if (!ShopHashtagExists(shopHashtag.Id))
                     {
                         return NotFound();
                     }
@@ -122,11 +127,11 @@ namespace NeighborhoodBulletin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id", shopHashtag.ShopOwnerId);
+            return View(shopHashtag);
         }
 
-        // GET: Neighbors/Delete/5
+        // GET: ShopHashtags/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,31 +139,31 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors
-                .Include(n => n.ApplicationUser)
+            var shopHashtag = await _context.ShopHashtags
+                .Include(s => s.ShopOwner)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (neighbor == null)
+            if (shopHashtag == null)
             {
                 return NotFound();
             }
 
-            return View(neighbor);
+            return View(shopHashtag);
         }
 
-        // POST: Neighbors/Delete/5
+        // POST: ShopHashtags/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var neighbor = await _context.Neighbors.FindAsync(id);
-            _context.Neighbors.Remove(neighbor);
+            var shopHashtag = await _context.ShopHashtags.FindAsync(id);
+            _context.ShopHashtags.Remove(shopHashtag);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NeighborExists(int id)
+        private bool ShopHashtagExists(int id)
         {
-            return _context.Neighbors.Any(e => e.Id == id);
+            return _context.ShopHashtags.Any(e => e.Id == id);
         }
     }
 }

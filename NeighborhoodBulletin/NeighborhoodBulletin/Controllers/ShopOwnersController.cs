@@ -32,6 +32,7 @@ namespace NeighborhoodBulletin.Controllers
             ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
             shopOwnerSubscriptionViewModel.ShopOwners = await shopOwners.ToListAsync();
             shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+            shopOwnerSubscriptionViewModel.Hashtags = await _context.Hashtags.Where(h => h.NeighborId == neighbor.Id).ToListAsync();
             return View(shopOwnerSubscriptionViewModel);
         }
 
@@ -74,7 +75,7 @@ namespace NeighborhoodBulletin.Controllers
                 shopOwner.ApplicationUserId = userId;
                 _context.Add(shopOwner);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Updates");
+                return RedirectToAction("Create", "ShopHashtags");
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", shopOwner.ApplicationUserId);
             return View(shopOwner);

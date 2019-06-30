@@ -202,6 +202,26 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Hashtags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(nullable: true),
+                    NeighborId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Hashtags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Hashtags_Neighbors_NeighborId",
+                        column: x => x.NeighborId,
+                        principalTable: "Neighbors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -220,6 +240,26 @@ namespace Domain.Migrations
                         name: "FK_Messages_Neighbors_NeighborId",
                         column: x => x.NeighborId,
                         principalTable: "Neighbors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ShopHashtags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(nullable: true),
+                    ShopOwnerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ShopHashtags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ShopHashtags_ShopOwners_ShopOwnerId",
+                        column: x => x.ShopOwnerId,
+                        principalTable: "ShopOwners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -287,6 +327,11 @@ namespace Domain.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Hashtags_NeighborId",
+                table: "Hashtags",
+                column: "NeighborId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_NeighborId",
                 table: "Messages",
                 column: "NeighborId");
@@ -295,6 +340,11 @@ namespace Domain.Migrations
                 name: "IX_Neighbors_ApplicationUserId",
                 table: "Neighbors",
                 column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ShopHashtags_ShopOwnerId",
+                table: "ShopHashtags",
+                column: "ShopOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShopOwners_ApplicationUserId",
@@ -325,7 +375,13 @@ namespace Domain.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Hashtags");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "ShopHashtags");
 
             migrationBuilder.DropTable(
                 name: "Updates");

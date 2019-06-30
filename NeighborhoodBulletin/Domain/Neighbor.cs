@@ -16,8 +16,6 @@ namespace Domain
         public List <int> ZipCodeSubscriptions { get; set; }
         [NotMapped]
         public List<string> BusinessSubscriptions { get; set; }
-        [NotMapped]
-        public List<Hashtag> Hashtags { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }

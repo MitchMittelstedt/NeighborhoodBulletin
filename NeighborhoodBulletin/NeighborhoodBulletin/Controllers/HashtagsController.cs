@@ -6,29 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
-    //[Authorize(Roles = "Neighbor")]
-    public class NeighborsController : Controller
+    public class HashtagsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public NeighborsController(ApplicationDbContext context)
+        public HashtagsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Neighbors
+        // GET: Hashtags
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Neighbors.Include(n => n.ApplicationUser);
+            var applicationDbContext = _context.Hashtags.Include(h => h.Neighbor);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Neighbors/Details/5
+        // GET: Hashtags/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,44 +34,45 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors
-                .Include(n => n.ApplicationUser)
+            var hashtag = await _context.Hashtags
+                .Include(h => h.Neighbor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (neighbor == null)
+            if (hashtag == null)
             {
                 return NotFound();
             }
 
-            return View(neighbor);
+            return View(hashtag);
         }
 
-        // GET: Neighbors/Create
+        // GET: Hashtags/Create
         public IActionResult Create()
         {
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
             return View();
         }
 
-        // POST: Neighbors/Create
+        // POST: Hashtags/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ZipCode,Username,Hashtags,ApplicationUserId")] Neighbor neighbor)
+        public async Task<IActionResult> Create([Bind("Id,Text,NeighborId")] Hashtag hashtag)
         {
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-                neighbor.ApplicationUserId = userId;
-                _context.Add(neighbor);
+                var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+                hashtag.NeighborId = neighbor.Id;
+                _context.Add(hashtag);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Hashtags");
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", hashtag.NeighborId);
+            return View(hashtag);
         }
 
-        // GET: Neighbors/Edit/5
+        // GET: Hashtags/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,23 +80,23 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors.FindAsync(id);
-            if (neighbor == null)
+            var hashtag = await _context.Hashtags.FindAsync(id);
+            if (hashtag == null)
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", hashtag.NeighborId);
+            return View(hashtag);
         }
 
-        // POST: Neighbors/Edit/5
+        // POST: Hashtags/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ZipCode,Username,ApplicationUserId")] Neighbor neighbor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,NeighborId")] Hashtag hashtag)
         {
-            if (id != neighbor.Id)
+            if (id != hashtag.Id)
             {
                 return NotFound();
             }
@@ -106,12 +105,12 @@ namespace NeighborhoodBulletin.Controllers
             {
                 try
                 {
-                    _context.Update(neighbor);
+                    _context.Update(hashtag);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NeighborExists(neighbor.Id))
+                    if (!HashtagExists(hashtag.Id))
                     {
                         return NotFound();
                     }
@@ -122,11 +121,11 @@ namespace NeighborhoodBulletin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
-            return View(neighbor);
+            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", hashtag.NeighborId);
+            return View(hashtag);
         }
 
-        // GET: Neighbors/Delete/5
+        // GET: Hashtags/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -134,31 +133,31 @@ namespace NeighborhoodBulletin.Controllers
                 return NotFound();
             }
 
-            var neighbor = await _context.Neighbors
-                .Include(n => n.ApplicationUser)
+            var hashtag = await _context.Hashtags
+                .Include(h => h.Neighbor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (neighbor == null)
+            if (hashtag == null)
             {
                 return NotFound();
             }
 
-            return View(neighbor);
+            return View(hashtag);
         }
 
-        // POST: Neighbors/Delete/5
+        // POST: Hashtags/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var neighbor = await _context.Neighbors.FindAsync(id);
-            _context.Neighbors.Remove(neighbor);
+            var hashtag = await _context.Hashtags.FindAsync(id);
+            _context.Hashtags.Remove(hashtag);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NeighborExists(int id)
+        private bool HashtagExists(int id)
         {
-            return _context.Neighbors.Any(e => e.Id == id);
+            return _context.Hashtags.Any(e => e.Id == id);
         }
     }
 }

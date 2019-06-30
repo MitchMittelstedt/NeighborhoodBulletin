@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190630041632_InitialMigration")]
+    [Migration("20190630223952_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,23 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Domain.Hashtag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NeighborId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NeighborId");
+
+                    b.ToTable("Hashtags");
+                });
+
             modelBuilder.Entity("Domain.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -142,6 +159,23 @@ namespace Domain.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Neighbors");
+                });
+
+            modelBuilder.Entity("Domain.ShopHashtag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("ShopHashtags");
                 });
 
             modelBuilder.Entity("Domain.ShopOwner", b =>
@@ -278,6 +312,14 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Hashtag", b =>
+                {
+                    b.HasOne("Domain.Neighbor", "Neighbor")
+                        .WithMany()
+                        .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Message", b =>
                 {
                     b.HasOne("Domain.Neighbor", "Neighbor")
@@ -291,6 +333,14 @@ namespace Domain.Migrations
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("Domain.ShopHashtag", b =>
+                {
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.ShopOwner", b =>
