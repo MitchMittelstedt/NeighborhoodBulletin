@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -28,7 +29,10 @@ namespace NeighborhoodBulletin.Controllers
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             var shopOwners = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
             var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
-            return View(await shopOwners.ToListAsync());
+            ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
+            shopOwnerSubscriptionViewModel.ShopOwners = await shopOwners.ToListAsync();
+            shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+            return View(shopOwnerSubscriptionViewModel);
         }
 
         // GET: ShopOwners/Details/5
