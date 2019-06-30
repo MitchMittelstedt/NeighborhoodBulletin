@@ -27,8 +27,8 @@ namespace NeighborhoodBulletin.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
-            messageIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode).ToListAsync();
-            messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).ToListAsync();
+            messageIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
+            messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
             messageIndexViewModel.Neighbor = neighbor;
 
             //var message = _context.Messages.WHere(m => m.Neighbor.ZipCode == neighbor.ZipCode);
@@ -99,7 +99,7 @@ namespace NeighborhoodBulletin.Controllers
             {
                 return NotFound();
             }
-            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", message.NeighborId);
+            ViewData["ZipCode"] = new SelectList(_context.Neighbors, "Id", "ZipCode", message.ZipCode);
             return View(message);
         }
 
@@ -108,7 +108,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,NeighborId,Text,SubmitButton,EditButton,DeleteButton,Like,Reply")] Message message)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text")] Message message)
         {
             if (id != message.Id)
             {
@@ -119,6 +119,12 @@ namespace NeighborhoodBulletin.Controllers
             {
                 try
                 {
+                    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+                    message.NeighborId = neighbor.Id;
+                    message.ZipCode = neighbor.ZipCode;
+                    message.Username = neighbor.Username;
+                    message.DateTime = DateTime.Now;
                     _context.Update(message);
                     await _context.SaveChangesAsync();
                 }
@@ -135,6 +141,7 @@ namespace NeighborhoodBulletin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", message.NeighborId);
             return View(message);
         }

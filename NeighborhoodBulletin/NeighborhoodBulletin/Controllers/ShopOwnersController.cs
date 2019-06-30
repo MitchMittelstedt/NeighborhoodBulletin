@@ -24,8 +24,11 @@ namespace NeighborhoodBulletin.Controllers
         // GET: ShopOwners
         public async Task<IActionResult> Index()
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            var shopOwners = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
             var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await shopOwners.ToListAsync());
         }
 
         // GET: ShopOwners/Details/5

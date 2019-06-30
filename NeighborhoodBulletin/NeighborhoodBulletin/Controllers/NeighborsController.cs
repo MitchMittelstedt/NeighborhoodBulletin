@@ -67,7 +67,7 @@ namespace NeighborhoodBulletin.Controllers
                 neighbor.ApplicationUserId = userId;
                 _context.Add(neighbor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Messages");
+                return RedirectToAction("Index", "ShopOwners");
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
             return View(neighbor);
