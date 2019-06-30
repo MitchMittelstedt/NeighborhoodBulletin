@@ -14,7 +14,11 @@ namespace Domain
         public int NeighborId { get; set; }
         public virtual Neighbor Neighbor { get; set; }
         public int ZipCode { get; set; }
+        public string Username { get; set; }
         public string Text { get; set; }
+        [NotMapped]
+        public List<string> Hashtags { get; set; }
+        [Display(Name = "Date Posted")]
         public DateTime DateTime { get; set; }
 
 

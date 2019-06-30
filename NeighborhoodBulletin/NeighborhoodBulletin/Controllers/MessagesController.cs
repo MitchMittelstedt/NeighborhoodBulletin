@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Security.Claims;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -22,12 +23,18 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Messages
         public async Task<IActionResult> Index()
         {
+
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
+            messageIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode).ToListAsync();
+            messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).ToListAsync();
+            messageIndexViewModel.Neighbor = neighbor;
+
             //var message = _context.Messages.WHere(m => m.Neighbor.ZipCode == neighbor.ZipCode);
             var message = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode); 
             var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
-            return View(await message.ToListAsync());
+            return View(messageIndexViewModel);
         }
 
         // GET: Messages/Details/5
@@ -69,6 +76,7 @@ namespace NeighborhoodBulletin.Controllers
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 message.NeighborId = neighbor.Id;
                 message.ZipCode = neighbor.ZipCode;
+                message.Username = neighbor.Username;
                 message.DateTime = DateTime.Now;
                 _context.Add(message);
                 await _context.SaveChangesAsync();

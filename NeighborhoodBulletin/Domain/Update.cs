@@ -12,8 +12,12 @@ namespace Domain
         public int Id { get; set; }
         [ForeignKey("ShopOwner")]
         public int ShopOwnerId { get; set; }
+        public int ZipCode { get; set; }
         public virtual ShopOwner ShopOwner { get; set; }
+        [Display(Name = "Business Name")]
+        public string BusinessName { get; set; }
         public string Text { get; set; }
+        [Display(Name = "Date Posted")]
         public DateTime DateTime { get; set; }
 
     }

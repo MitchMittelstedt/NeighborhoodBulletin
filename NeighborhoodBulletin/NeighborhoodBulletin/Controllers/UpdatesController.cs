@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Security.Claims;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -24,6 +25,9 @@ namespace NeighborhoodBulletin.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
+            UpdateIndexViewModel updateIndexViewModel = new UpdateIndexViewModel();
+            updateIndexViewModel.Updates = await _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id).ToListAsync();
+            updateIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == shopOwner.ZipCode).ToListAsync();
             var messages = _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id);
             //var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
             return View(await messages.ToListAsync());
@@ -67,6 +71,8 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
                 update.ShopOwnerId = shopOwner.Id;
+                update.ZipCode = shopOwner.ZipCode;
+                update.BusinessName = shopOwner.BusinessName;
                 update.DateTime = DateTime.Now;
                 _context.Add(update);
                 await _context.SaveChangesAsync();

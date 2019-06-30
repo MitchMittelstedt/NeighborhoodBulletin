@@ -18,6 +18,8 @@ namespace Domain
         public List<string> DiscussionSubscriptions { get; set; }
         [NotMapped]
         public List<string> BusinessSubscriptions { get; set; }
+        [NotMapped]
+        public List<string> Hashtags { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }

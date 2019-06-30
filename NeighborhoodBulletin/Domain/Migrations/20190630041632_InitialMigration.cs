@@ -209,6 +209,7 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     NeighborId = table.Column<int>(nullable: false),
                     ZipCode = table.Column<int>(nullable: false),
+                    Username = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     DateTime = table.Column<DateTime>(nullable: false)
                 },
@@ -230,6 +231,8 @@ namespace Domain.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ShopOwnerId = table.Column<int>(nullable: false),
+                    ZipCode = table.Column<int>(nullable: false),
+                    BusinessName = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     DateTime = table.Column<DateTime>(nullable: false)
                 },

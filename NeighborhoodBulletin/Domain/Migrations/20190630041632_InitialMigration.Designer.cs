@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190629132435_InitialMigration")]
+    [Migration("20190630041632_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,6 +114,8 @@ namespace Domain.Migrations
 
                     b.Property<string>("Text");
 
+                    b.Property<string>("Username");
+
                     b.Property<int>("ZipCode");
 
                     b.HasKey("Id");
@@ -173,11 +175,15 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("BusinessName");
+
                     b.Property<DateTime>("DateTime");
 
                     b.Property<int>("ShopOwnerId");
 
                     b.Property<string>("Text");
+
+                    b.Property<int>("ZipCode");
 
                     b.HasKey("Id");
 
