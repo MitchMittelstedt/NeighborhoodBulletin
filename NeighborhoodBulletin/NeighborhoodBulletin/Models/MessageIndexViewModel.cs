@@ -16,5 +16,6 @@ namespace NeighborhoodBulletin.Models
         public Update Update { get; set; }
         public Location Location { get; set; }
         public string Url { get; set; }
+        public Subscription Subscription { get; set; }
     }
 }

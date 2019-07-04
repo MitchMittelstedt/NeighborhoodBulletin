@@ -12,7 +12,7 @@
 @*<p>
         <a asp-action="Create">Create New</a>
     </p>*@
-<form asp-action="post">
+<form method="POST">
     <table class="table">
         <thead>
             <tr>
@@ -60,7 +60,7 @@
                     </td>
 
                     <td>
-                        <input asp-for="@Model.Subscription.SubscriptionStatus" /> @*@Html.DisplayNameFor(model => model.Subscription.SubscriptionStatus)*@
+                        <input type="checkbox" id="subscriptionStatus" /> @Model.Subscription.SubscriptionStatus" /> @*@Html.DisplayNameFor(model => model.Subscription.SubscriptionStatus)*@
                     </td>
                     @Html.HiddenFor(modelItem => item.ApplicationUser.Id)
                     @*<td>
@@ -76,8 +76,14 @@
             }
         </tbody>
 
+
     </table>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+
+
 </form>
-<div class="form-group">
-    <input type="submit" value="Save" class="btn btn-default" />
-</div>
+
+
+

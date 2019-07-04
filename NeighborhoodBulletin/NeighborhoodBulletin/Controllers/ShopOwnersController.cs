@@ -23,6 +23,7 @@ namespace NeighborhoodBulletin.Controllers
         }
 
         // GET: ShopOwners
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -72,6 +73,95 @@ namespace NeighborhoodBulletin.Controllers
             return View(shopOwnerSubscriptionViewModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(IEnumerable<bool> subscriptionStatuses)
+        {
+            {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+                var shopOwners = new List<ShopOwner>();
+                var shopOwnersInZip = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
+                var shopHashtags = _context.ShopHashtags.Where(s => s.ZipCode == neighbor.ZipCode);
+                var shopOwnerIds = new List<int>();
+                var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
+
+                foreach (var h in hashtags)
+                {
+                    foreach (var s in shopHashtags)
+                    {
+                        if (h.Text == s.Text)
+                        {
+                            var shopOwnerId = s.ShopOwnerId;
+
+                            if (shopOwnerIds.Contains(shopOwnerId) == true)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                shopOwnerIds.Add(shopOwnerId);
+                            }
+                        }
+                    }
+                }
+                foreach (var shopOwnerId in shopOwnerIds)
+                {
+                    var shopOwner = _context.ShopOwners.Where(s => s.Id == shopOwnerId).FirstOrDefault();
+                    if (shopOwners.Contains(shopOwner))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        shopOwners.Add(shopOwner);
+                    }
+
+                }
+                foreach(bool subscriptionStatus in subscriptionStatuses)
+                {
+                    foreach(var shopOwner in shopOwners)
+                    {
+                        if (subscriptionStatus == false)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            Subscription subscription = new Subscription();
+                            subscription.NeighborId = neighbor.Id;
+                            subscription.ShopOwnerId = shopOwner.Id;
+                            subscription.SubscriptionStatus = subscriptionStatus;
+                        }
+                    }
+                }
+
+
+
+
+                //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
+                ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
+                shopOwnerSubscriptionViewModel.ShopOwners = shopOwners;
+                shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+                return View(shopOwnerSubscriptionViewModel);
+            }
+        }
+
+
+        //{
+        //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+        //    foreach (bool s in subscriptionStatuses)
+        //    if (s == false)
+        //        {
+        //            continue;
+        //        }
+        //    else
+        //        {
+        //            Subscription subscription = new Subscription();
+        //            subscription.NeighborId = neighbor.Id;
+        //            subscription.ShopOwnerId = 
+        //        }
+        //}
         // GET: ShopOwners/Details/5
         public async Task<IActionResult> Details(int? id)
         {

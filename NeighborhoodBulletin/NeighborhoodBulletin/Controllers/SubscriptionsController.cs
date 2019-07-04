@@ -50,7 +50,7 @@ namespace NeighborhoodBulletin.Controllers
         {
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id");
-            return View();
+            return View("Index");
         }
 
         // POST: Subscriptions/Create
