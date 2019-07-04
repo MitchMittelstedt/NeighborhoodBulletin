@@ -14,5 +14,6 @@ namespace Domain
         [ForeignKey("ShopOwner)")]
         public int ShopOwnerId { get; set; }
         public virtual ShopOwner ShopOwner { get; set; }
+        public int ZipCode { get; set; }
     }
 }

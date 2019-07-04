@@ -9,7 +9,8 @@ namespace NeighborhoodBulletin.Models
     public class ShopOwnerSubscriptionViewModel
     {
         public Neighbor Neighbor { get; set; }
-        public List<Hashtag> Hashtags { get; set; }
+        public ShopOwner ShopOwner { get; set; }
         public List<ShopOwner> ShopOwners { get; set; }
+        public Subscription Subscription { get; set; }
     }
 }

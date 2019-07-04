@@ -57,7 +57,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,ShopOwnerId")] ShopHashtag shopHashtag)
+        public async Task<IActionResult> Create([Bind("Id,Text")] ShopHashtag shopHashtag)
         {
             if (ModelState.IsValid)
             {
@@ -67,8 +67,11 @@ namespace NeighborhoodBulletin.Controllers
                 foreach(var s in shopHashtagTexts)
                 {
                     ShopHashtag newShopHashtag = new ShopHashtag();
+                    newShopHashtag.ShopOwner = shopOwner;
                     newShopHashtag.ShopOwnerId = shopOwner.Id;
                     newShopHashtag.Text = s;
+                    newShopHashtag.ZipCode = shopOwner.ZipCode;
+
                     _context.Add(newShopHashtag);
                     await _context.SaveChangesAsync();
                 }

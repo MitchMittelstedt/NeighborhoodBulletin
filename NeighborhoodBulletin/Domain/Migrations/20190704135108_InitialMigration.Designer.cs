@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190630223952_InitialMigration")]
+    [Migration("20190704135108_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,6 +119,21 @@ namespace Domain.Migrations
                     b.ToTable("Hashtags");
                 });
 
+            modelBuilder.Entity("Domain.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("lat");
+
+                    b.Property<double>("lng");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
+                });
+
             modelBuilder.Entity("Domain.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -150,6 +165,10 @@ namespace Domain.Migrations
 
                     b.Property<string>("ApplicationUserId");
 
+                    b.Property<double>("Latitude");
+
+                    b.Property<double>("Longitude");
+
                     b.Property<string>("Username");
 
                     b.Property<int>("ZipCode");
@@ -170,6 +189,8 @@ namespace Domain.Migrations
                     b.Property<int>("ShopOwnerId");
 
                     b.Property<string>("Text");
+
+                    b.Property<int>("ZipCode");
 
                     b.HasKey("Id");
 
@@ -201,6 +222,27 @@ namespace Domain.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("ShopOwners");
+                });
+
+            modelBuilder.Entity("Domain.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NeighborId");
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.Property<bool>("SubscriptionStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NeighborId");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Domain.Update", b =>
@@ -348,6 +390,19 @@ namespace Domain.Migrations
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("Domain.Subscription", b =>
+                {
+                    b.HasOne("Domain.Neighbor", "Neighbor")
+                        .WithMany()
+                        .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Update", b =>

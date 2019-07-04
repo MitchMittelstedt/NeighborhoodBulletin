@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -65,6 +69,18 @@ namespace NeighborhoodBulletin.Controllers
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 neighbor.ApplicationUserId = userId;
+                // GEOCODE ZIPCODE INTO LAT AND LON
+                var zipcode = neighbor.ZipCode;
+
+
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={zipcode}&key={APIKey.SecretKey}&callback=initMap";
+                var jsonObject = new WebClient().DownloadString(url);
+                //javascript 
+                //Location neighborLocation = new Location();
+                var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
+
+                neighbor.Latitude = nLocation.results[0].geometry.location.lat;
+                neighbor.Longitude = nLocation.results[0].geometry.location.lng;
                 _context.Add(neighbor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "Hashtags");

@@ -51,6 +51,20 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    lat = table.Column<double>(nullable: false),
+                    lng = table.Column<double>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -164,7 +178,9 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ZipCode = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,13 +267,41 @@ namespace Domain.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Text = table.Column<string>(nullable: true),
-                    ShopOwnerId = table.Column<int>(nullable: false)
+                    ShopOwnerId = table.Column<int>(nullable: false),
+                    ZipCode = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ShopHashtags", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ShopHashtags_ShopOwners_ShopOwnerId",
+                        column: x => x.ShopOwnerId,
+                        principalTable: "ShopOwners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NeighborId = table.Column<int>(nullable: false),
+                    ShopOwnerId = table.Column<int>(nullable: false),
+                    SubscriptionStatus = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_Neighbors_NeighborId",
+                        column: x => x.NeighborId,
+                        principalTable: "Neighbors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_ShopOwners_ShopOwnerId",
                         column: x => x.ShopOwnerId,
                         principalTable: "ShopOwners",
                         principalColumn: "Id",
@@ -352,6 +396,16 @@ namespace Domain.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_NeighborId",
+                table: "Subscriptions",
+                column: "NeighborId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_ShopOwnerId",
+                table: "Subscriptions",
+                column: "ShopOwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Updates_ShopOwnerId",
                 table: "Updates",
                 column: "ShopOwnerId");
@@ -378,10 +432,16 @@ namespace Domain.Migrations
                 name: "Hashtags");
 
             migrationBuilder.DropTable(
+                name: "Locations");
+
+            migrationBuilder.DropTable(
                 name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "ShopHashtags");
+
+            migrationBuilder.DropTable(
+                name: "Subscriptions");
 
             migrationBuilder.DropTable(
                 name: "Updates");

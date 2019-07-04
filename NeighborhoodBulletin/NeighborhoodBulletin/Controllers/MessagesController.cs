@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Security.Claims;
 using NeighborhoodBulletin.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -26,17 +30,53 @@ namespace NeighborhoodBulletin.Controllers
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            var url = $"https://maps.googleapis.com/maps/api/js?key={APIKey.SecretKey}&callback=initMap";
+            //var jsonObject = new WebClient().DownloadString(url);
+            //javascript 
+            //Location neighborLocation = new Location();
+
+
+            //dynamic jObject = JObject.Parse(jsonObject);
+            //var lat = jObject.results[0].geometry.location.lat;
+            //var lng = jObject.results[0].geometry.location.lng;
+            //neighborLocation.lat = lat;
+            //neighborLocation.lng = lng;
+            //neighborLocation = JsonConvert.DeserializeObject<Location>(jsonObject); in 
+            //var lat = location["lat"];
+            //var lng = location["lng"];
+            //var stuff = _download_serialized_json_data(url);
             MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
             messageIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
             messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
             messageIndexViewModel.Neighbor = neighbor;
+            messageIndexViewModel.Url = url;
+            //messageIndexViewModel.Location = neighborLocation;
+            //make zipcode connected to the center of the google map that pops up when the neighbor logs in. get latlong of zipcode.
+
 
             //var message = _context.Messages.WHere(m => m.Neighbor.ZipCode == neighbor.ZipCode);
-            var message = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode); 
-            var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
+            //var message = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode); 
+            //var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
             return View(messageIndexViewModel);
         }
 
+
+        private static T _download_serialized_json_data<T>(string url) where T : new()
+        {
+            using (var w = new WebClient())
+            {
+                var json_data = string.Empty;
+                // attempt to download JSON data as a string
+                try
+                {
+                    json_data = w.DownloadString(url);
+                }
+                catch (Exception) { }
+                // if string with JSON data is not empty, deserialize it to class and return its instance 
+                return !string.IsNullOrEmpty(json_data) ? JsonConvert.DeserializeObject<T>(json_data) : new T();
+            }
+
+        }
         // GET: Messages/Details/5
         public async Task<IActionResult> Details(int? id)
         {

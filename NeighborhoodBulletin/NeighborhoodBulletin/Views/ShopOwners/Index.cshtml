@@ -1,63 +1,83 @@
-﻿@model IEnumerable<Domain.ShopOwner>
+﻿@model NeighborhoodBulletin.Models.ShopOwnerSubscriptionViewModel
+
+
 
 @{
-    ViewData["Title"] = "Businesses of Interest in your ZipCode";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+
+<h2>Business of Interest in your Zip Code</h2>
 
 @*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ZipCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BusinessName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BusinessName)
-            </td>
-            @Html.HiddenFor(modelItem => item.ApplicationUser.Id)
-            @*<td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <a asp-action="Create">Create New</a>
+    </p>*@
+<form asp-action="post">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopOwner.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopOwner.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopOwner.State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopOwner.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShopOwner.BusinessName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subscription.SubscriptionStatus)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.ShopOwners)
+            {
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BusinessName)
+                    </td>
+
+                    <td>
+                        <input asp-for="@Model.Subscription.SubscriptionStatus" /> @*@Html.DisplayNameFor(model => model.Subscription.SubscriptionStatus)*@
+                    </td>
+                    @Html.HiddenFor(modelItem => item.ApplicationUser.Id)
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                        </td>*@
+                    @*<td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>*@
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+</form>
+<div class="form-group">
+    <input type="submit" value="Save" class="btn btn-default" />
+</div>

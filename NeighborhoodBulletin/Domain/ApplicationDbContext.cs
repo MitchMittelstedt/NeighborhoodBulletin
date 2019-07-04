@@ -16,6 +16,8 @@ namespace Domain
         public DbSet<Update> Updates { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<ShopHashtag> ShopHashtags { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Location> Locations { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

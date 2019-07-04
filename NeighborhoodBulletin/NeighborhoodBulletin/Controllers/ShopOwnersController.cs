@@ -27,12 +27,48 @@ namespace NeighborhoodBulletin.Controllers
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
-            var shopOwners = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
-            var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
+            var shopOwners = new List<ShopOwner>();
+            var shopOwnersInZip = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
+            var shopHashtags = _context.ShopHashtags.Where(s => s.ZipCode == neighbor.ZipCode);
+            var shopOwnerIds = new List<int>();
+            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
+
+            foreach (var h in hashtags)
+            {
+                foreach (var s in shopHashtags)
+                {
+                    if(h.Text == s.Text)
+                    {
+                        var shopOwnerId = s.ShopOwnerId;
+
+                        if(shopOwnerIds.Contains(shopOwnerId) == true)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            shopOwnerIds.Add(shopOwnerId);
+                        }
+                    }
+                }
+            }
+            foreach (var shopOwnerId in shopOwnerIds)
+            {
+                var shopOwner = _context.ShopOwners.Where(s => s.Id == shopOwnerId).FirstOrDefault();
+                if (shopOwners.Contains(shopOwner))
+                {
+                    continue;
+                }
+                else
+                {
+                    shopOwners.Add(shopOwner);
+                }
+
+            }
+            //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
             ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
-            shopOwnerSubscriptionViewModel.ShopOwners = await shopOwners.ToListAsync();
+            shopOwnerSubscriptionViewModel.ShopOwners = shopOwners;
             shopOwnerSubscriptionViewModel.Neighbor = neighbor;
-            shopOwnerSubscriptionViewModel.Hashtags = await _context.Hashtags.Where(h => h.NeighborId == neighbor.Id).ToListAsync();
             return View(shopOwnerSubscriptionViewModel);
         }
 

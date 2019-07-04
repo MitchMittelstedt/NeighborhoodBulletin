@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,11 +14,15 @@ namespace Domain
         public int ZipCode { get; set; }
         public string Username { get; set; }
         [NotMapped]
-        public List <int> ZipCodeSubscriptions { get; set; }
+        public List<int> ZipCodeSubscriptions { get; set; }
         [NotMapped]
         public List<string> BusinessSubscriptions { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
+        [JsonProperty("lat")]
+        public double Latitude { get; set; }
+        [JsonProperty("lng")]
+        public double Longitude { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
     }

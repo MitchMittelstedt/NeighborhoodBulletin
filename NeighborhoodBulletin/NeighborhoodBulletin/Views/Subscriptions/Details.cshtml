@@ -1,0 +1,36 @@
+﻿@model Domain.Subscription
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Subscription</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Neighbor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Neighbor.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopOwner)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShopOwner.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubscriptionStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SubscriptionStatus)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
