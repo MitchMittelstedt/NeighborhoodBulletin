@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using System.Security.Claims;
+using NeighborhoodBulletin.Models;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -21,8 +23,88 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Subscriptions
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Subscriptions.Include(s => s.Neighbor).Include(s => s.ShopOwner);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            var shopOwners = new List<ShopOwner>();
+            var shopOwnersInZip = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
+            var shopHashtags = _context.ShopHashtags.Where(s => s.ZipCode == neighbor.ZipCode);
+            var shopOwnerIds = new List<int>();
+            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
+            var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
+            foreach (var h in hashtags)
+            {
+                //adds shopOwnerId of the shopHashtag whose Text matches one of the neighbor's Hashtags to the list of shopOwnerIds if it doesn't already exist there.
+                foreach (var s in shopHashtags)
+                {
+                    if (h.Text == s.Text)
+                    {
+                        var shopOwnerId = s.ShopOwnerId;
+
+                        if (shopOwnerIds.Contains(shopOwnerId) == true)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            shopOwnerIds.Add(shopOwnerId);
+                        }
+                    }
+                }
+            }
+            foreach (var shopOwnerId in shopOwnerIds)
+            {
+                var shopOwner = _context.ShopOwners.Where(s => s.Id == shopOwnerId).FirstOrDefault();
+                if (shopOwners.Contains(shopOwner))
+                {
+                    continue;
+                }
+                else
+                {
+                    shopOwners.Add(shopOwner);
+                }
+
+            }
+            var subscribed = new bool();
+            foreach(var subscription in subscriptions)
+            {
+                if (subscription.ShopOwner.Id == subscription.ShopOwnerId)
+                {
+                    subscribed = true;
+                }
+                else
+                {
+                    subscribed = false;
+                }
+            }
+
+            List<ShopOwnerSubscriptionViewModel> shopOwnerSubscriptionViewModelList = new List<ShopOwnerSubscriptionViewModel>();
+
+            var shopOwnersList = await _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode).ToListAsync();
+
+            foreach (ShopOwner shopOwner in shopOwnersList)
+            {
+                ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModelForShopOwner = new ShopOwnerSubscriptionViewModel();
+                shopOwnerSubscriptionViewModelForShopOwner.ShopOwner = shopOwner;
+                shopOwnerSubscriptionViewModelForShopOwner.ShopOwners = shopOwners;
+                //shopOwnerSubscriptionViewModelForShopOwner.Hashtags = hashtags; //add hashtags list
+                //shopOwnerSubscriptionViewModelForShopOwner.ShopHashtags = shopHashtags;
+                shopOwnerSubscriptionViewModelForShopOwner.Neighbor = neighbor;
+                shopOwnerSubscriptionViewModelForShopOwner.Subscriptions = subscriptions;
+                shopOwnerSubscriptionViewModelForShopOwner.Subscribed = _context.Subscriptions.Where(s => s.ShopOwnerId == shopOwner.Id && s.NeighborId == neighbor.Id).Select(s => s.SubscriptionStatus).SingleOrDefault();
+                shopOwnerSubscriptionViewModelForShopOwner.ShopHashtags = await _context.ShopHashtags.Where(s => s.ShopOwnerId == shopOwner.Id).ToListAsync();
+                shopOwnerSubscriptionViewModelForShopOwner.ShopOwnerIds = shopOwnerIds;
+                shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModelForShopOwner);
+            }
+                //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
+                ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
+
+                shopOwnerSubscriptionViewModel.ShopOwners = shopOwners;
+                shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+                shopOwnerSubscriptionViewModel.Subscriptions = subscriptions;
+                shopOwnerSubscriptionViewModel.Subscribed = subscribed; //this doesn't makes sense . . . all the other properties are per neighbor, whereas this one is per shopOnwer
+                return View(shopOwnerSubscriptionViewModelList);
+
+            
         }
 
         // GET: Subscriptions/Details/5
@@ -46,11 +128,12 @@ namespace NeighborhoodBulletin.Controllers
         }
 
         // GET: Subscriptions/Create
-        public IActionResult Create()
+        public IActionResult Create(Subscription subscription, int shopOwnerId)
         {
+            subscription.ShopOwnerId = shopOwnerId;
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id");
-            return View("Index");
+            return View(subscription);
         }
 
         // POST: Subscriptions/Create
@@ -62,6 +145,7 @@ namespace NeighborhoodBulletin.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 _context.Add(subscription);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

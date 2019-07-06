@@ -12,5 +12,9 @@ namespace NeighborhoodBulletin.Models
         public ShopOwner ShopOwner { get; set; }
         public List<ShopOwner> ShopOwners { get; set; }
         public Subscription Subscription { get; set; }
+        public List<Subscription> Subscriptions { get; set; }
+        public bool Subscribed { get; set; }
+        public List<ShopHashtag> ShopHashtags { get; set; }
+        public List<int> ShopOwnerIds { get; set; }
     }
 }

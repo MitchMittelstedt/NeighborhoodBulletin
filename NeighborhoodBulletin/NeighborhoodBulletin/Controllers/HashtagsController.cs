@@ -72,7 +72,7 @@ namespace NeighborhoodBulletin.Controllers
                     _context.Add(newHashtag);
                     await _context.SaveChangesAsync();
                 }
-                return RedirectToAction("Index", "ShopOwners");
+                return RedirectToAction("Create", "Subscriptions");
             }
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", hashtag.NeighborId);
             return View(hashtag);

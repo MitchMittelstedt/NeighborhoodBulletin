@@ -74,7 +74,7 @@ namespace NeighborhoodBulletin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(IEnumerable<bool> subscriptionStatuses)
+        public async Task<IActionResult> Index(IEnumerable<bool> subscriptionStatus)
         {
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -117,11 +117,11 @@ namespace NeighborhoodBulletin.Controllers
                     }
 
                 }
-                foreach(bool subscriptionStatus in subscriptionStatuses)
+                foreach(bool s in subscriptionStatus)
                 {
                     foreach(var shopOwner in shopOwners)
                     {
-                        if (subscriptionStatus == false)
+                        if (s == false)
                         {
                             continue;
                         }
@@ -130,7 +130,7 @@ namespace NeighborhoodBulletin.Controllers
                             Subscription subscription = new Subscription();
                             subscription.NeighborId = neighbor.Id;
                             subscription.ShopOwnerId = shopOwner.Id;
-                            subscription.SubscriptionStatus = subscriptionStatus;
+                            subscription.SubscriptionStatus = s;
                         }
                     }
                 }
@@ -142,7 +142,8 @@ namespace NeighborhoodBulletin.Controllers
                 ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
                 shopOwnerSubscriptionViewModel.ShopOwners = shopOwners;
                 shopOwnerSubscriptionViewModel.Neighbor = neighbor;
-                return View(shopOwnerSubscriptionViewModel);
+                await _context.SaveChangesAsync();
+                return View("Index", "Subscriptions");
             }
         }
 
