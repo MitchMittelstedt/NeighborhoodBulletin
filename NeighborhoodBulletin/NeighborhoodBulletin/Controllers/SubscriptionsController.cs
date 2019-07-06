@@ -67,7 +67,7 @@ namespace NeighborhoodBulletin.Controllers
             var subscribed = new bool();
             foreach(var subscription in subscriptions)
             {
-                if (subscription.ShopOwner.Id == subscription.ShopOwnerId)
+                if (subscription.Neighbor.Id == neighbor.Id)
                 {
                     subscribed = true;
                 }

@@ -64,7 +64,7 @@
                         {
                             continue;
                         }
-                        else if (item.Subscribed == false)
+                        else
                         {
                             @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.ShopOwner.Id })
                         }
