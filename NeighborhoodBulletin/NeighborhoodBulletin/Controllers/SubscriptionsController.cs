@@ -64,18 +64,20 @@ namespace NeighborhoodBulletin.Controllers
                 }
 
             }
-            var subscribed = new bool();
-            foreach(var subscription in subscriptions)
-            {
-                if (subscription.Neighbor.Id == neighbor.Id)
-                {
-                    subscribed = true;
-                }
-                else
-                {
-                    subscribed = false;
-                }
-            }
+            //var subscribed = new bool();
+            //foreach(var subscription in subscriptions)
+            //{
+            //    if (subscription.Neighbor.Id == neighbor.Id)
+            //    {
+            //        subscribed = true;
+            //    }
+            //    else
+            //    {
+            //        subscribed = false;
+            //    }
+            //}
+
+
 
             List<ShopOwnerSubscriptionViewModel> shopOwnerSubscriptionViewModelList = new List<ShopOwnerSubscriptionViewModel>();
 
@@ -88,10 +90,17 @@ namespace NeighborhoodBulletin.Controllers
                 shopOwnerSubscriptionViewModelForShopOwner.ShopOwners = shopOwners;
                 shopOwnerSubscriptionViewModelForShopOwner.Neighbor = neighbor;
                 shopOwnerSubscriptionViewModelForShopOwner.Subscriptions = subscriptions;
+                foreach (var s in subscriptions)
+                {
+                    shopOwnerSubscriptionViewModelForShopOwner.Subscription = s;
+                }
                 shopOwnerSubscriptionViewModelForShopOwner.Subscribed = _context.Subscriptions.Where(s => s.ShopOwnerId == shopOwner.Id && s.NeighborId == neighbor.Id).Select(s => s.SubscriptionStatus).SingleOrDefault();
                 shopOwnerSubscriptionViewModelForShopOwner.ShopOwnerIds = shopOwnerIds;
                 shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModelForShopOwner);
             }
+
+
+
                 //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);  
                 return View(shopOwnerSubscriptionViewModelList);
 
@@ -119,7 +128,7 @@ namespace NeighborhoodBulletin.Controllers
         }
 
         // GET: Subscriptions/Create
-        public IActionResult Create(Subscription subscription, int shopOwnerId, ShopOwner shopOwner)
+        public IActionResult Create(Subscription subscription, int shopOwnerId)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();

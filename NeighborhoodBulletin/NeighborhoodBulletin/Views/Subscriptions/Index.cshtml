@@ -62,7 +62,7 @@
                         @if (item.Subscribed == true)
 
                         {
-                            continue;
+                            @Html.ActionLink("Unsubscribe", "Delete", new { id = item.Subscription.Id })
                         }
                         else
                         {
