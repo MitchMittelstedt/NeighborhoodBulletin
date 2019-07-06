@@ -86,22 +86,13 @@ namespace NeighborhoodBulletin.Controllers
                 ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModelForShopOwner = new ShopOwnerSubscriptionViewModel();
                 shopOwnerSubscriptionViewModelForShopOwner.ShopOwner = shopOwner;
                 shopOwnerSubscriptionViewModelForShopOwner.ShopOwners = shopOwners;
-                //shopOwnerSubscriptionViewModelForShopOwner.Hashtags = hashtags; //add hashtags list
-                //shopOwnerSubscriptionViewModelForShopOwner.ShopHashtags = shopHashtags;
                 shopOwnerSubscriptionViewModelForShopOwner.Neighbor = neighbor;
                 shopOwnerSubscriptionViewModelForShopOwner.Subscriptions = subscriptions;
                 shopOwnerSubscriptionViewModelForShopOwner.Subscribed = _context.Subscriptions.Where(s => s.ShopOwnerId == shopOwner.Id && s.NeighborId == neighbor.Id).Select(s => s.SubscriptionStatus).SingleOrDefault();
-                shopOwnerSubscriptionViewModelForShopOwner.ShopHashtags = await _context.ShopHashtags.Where(s => s.ShopOwnerId == shopOwner.Id).ToListAsync();
                 shopOwnerSubscriptionViewModelForShopOwner.ShopOwnerIds = shopOwnerIds;
                 shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModelForShopOwner);
             }
-                //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);
-                ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
-
-                shopOwnerSubscriptionViewModel.ShopOwners = shopOwners;
-                shopOwnerSubscriptionViewModel.Neighbor = neighbor;
-                shopOwnerSubscriptionViewModel.Subscriptions = subscriptions;
-                shopOwnerSubscriptionViewModel.Subscribed = subscribed; //this doesn't makes sense . . . all the other properties are per neighbor, whereas this one is per shopOnwer
+                //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);  
                 return View(shopOwnerSubscriptionViewModelList);
 
             
@@ -128,9 +119,13 @@ namespace NeighborhoodBulletin.Controllers
         }
 
         // GET: Subscriptions/Create
-        public IActionResult Create(Subscription subscription, int shopOwnerId)
+        public IActionResult Create(Subscription subscription, int shopOwnerId, ShopOwner shopOwner)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            subscription.NeighborId = neighbor.Id;
             subscription.ShopOwnerId = shopOwnerId;
+            subscription.SubscriptionStatus = true;
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id");
             return View(subscription);
