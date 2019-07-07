@@ -204,7 +204,9 @@ namespace Domain.Migrations
                     State = table.Column<string>(nullable: true),
                     ZipCode = table.Column<int>(nullable: false),
                     BusinessName = table.Column<string>(nullable: true),
-                    ApplicationUserId = table.Column<string>(nullable: true)
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    Latitude = table.Column<double>(nullable: false),
+                    Longitude = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {

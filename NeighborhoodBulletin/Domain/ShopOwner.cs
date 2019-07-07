@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,5 +23,9 @@ namespace Domain
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+        [JsonProperty("lat")]
+        public double Latitude { get; set; }
+        [JsonProperty("lng")]
+        public double Longitude { get; set; }
     }
 }

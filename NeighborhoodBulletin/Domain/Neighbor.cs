@@ -19,11 +19,10 @@ namespace Domain
         public List<string> BusinessSubscriptions { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
         [JsonProperty("lat")]
         public double Latitude { get; set; }
         [JsonProperty("lng")]
         public double Longitude { get; set; }
-        public virtual ApplicationUser ApplicationUser { get; set; }
-
     }
 }

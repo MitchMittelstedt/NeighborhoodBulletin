@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Security.Claims;
 using NeighborhoodBulletin.Models;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -135,6 +137,12 @@ namespace NeighborhoodBulletin.Controllers
             subscription.NeighborId = neighbor.Id;
             subscription.ShopOwnerId = shopOwnerId;
             subscription.SubscriptionStatus = true;
+            var shopOwner = _context.ShopOwners.Where(s => s.Id == subscription.ShopOwnerId).FirstOrDefault(); ;
+            var address = _context.ShopOwners.Where(s => s.Id == shopOwnerId).Select(s => s.Address).FirstOrDefault();
+            var city = _context.ShopOwners.Where(s => s.Id == shopOwnerId).Select(s => s.City).FirstOrDefault();
+            var state = _context.ShopOwners.Where(s => s.Id == shopOwnerId).Select(s => s.State).FirstOrDefault();
+            var zipCode = _context.ShopOwners.Where(s => s.Id == shopOwnerId).Select(s => s.ZipCode).FirstOrDefault();      
+
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id");
             return View(subscription);

@@ -211,6 +211,10 @@ namespace Domain.Migrations
 
                     b.Property<string>("City");
 
+                    b.Property<double>("Latitude");
+
+                    b.Property<double>("Longitude");
+
                     b.Property<string>("State");
 
                     b.Property<int>("ZipCode");

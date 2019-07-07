@@ -16,7 +16,7 @@ namespace Domain
         [ForeignKey("ShopOwner")]
         public int ShopOwnerId { get; set; }
         public ShopOwner ShopOwner { get; set; }
-        [Display(Name = "Subscribe/Unsubscribe")]
+        [Display(Name = "Subscribe/Unsubscribegit ")]
         public bool SubscriptionStatus { get; set; } = true;
     }
 }

@@ -9,6 +9,8 @@ using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using NeighborhoodBulletin.Models;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -200,6 +202,13 @@ namespace NeighborhoodBulletin.Controllers
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 shopOwner.ApplicationUserId = userId;
+                var addressString = $"{shopOwner.Address}+{shopOwner.City}+{shopOwner.State}+{shopOwner.ZipCode}";
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={addressString}&key={APIKey.SecretKey}&callback=initMap";
+                var jsonObject = new WebClient().DownloadString(url);
+                var shopOwnerLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
+
+                shopOwner.Latitude = shopOwnerLocation.results[0].geometry.location.lat;
+                shopOwner.Longitude = shopOwnerLocation.results[0].geometry.location.lng;
                 _context.Add(shopOwner);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "ShopHashtags");
