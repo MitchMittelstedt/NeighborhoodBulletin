@@ -209,6 +209,9 @@ namespace NeighborhoodBulletin.Controllers
 
                 shopOwner.Latitude = shopOwnerLocation.results[0].geometry.location.lat;
                 shopOwner.Longitude = shopOwnerLocation.results[0].geometry.location.lng;
+                Dictionary<string, double> latLng = new Dictionary<string, double>() {
+                    {"lat", shopOwner.Latitude }, {"lng", shopOwner.Longitude } };
+                shopOwner.LatLng = latLng;
                 _context.Add(shopOwner);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "ShopHashtags");

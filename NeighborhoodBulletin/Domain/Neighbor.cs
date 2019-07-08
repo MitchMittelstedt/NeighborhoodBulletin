@@ -24,5 +24,6 @@ namespace Domain
         public double Latitude { get; set; }
         [JsonProperty("lng")]
         public double Longitude { get; set; }
+
     }
 }

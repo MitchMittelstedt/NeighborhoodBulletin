@@ -31,52 +31,62 @@ namespace NeighborhoodBulletin.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             var url = $"https://maps.googleapis.com/maps/api/js?key={APIKey.SecretKey}&callback=initMap";
-            //var jsonObject = new WebClient().DownloadString(url);
-            //javascript 
-            //Location neighborLocation = new Location();
-
-
-            //dynamic jObject = JObject.Parse(jsonObject);
-            //var lat = jObject.results[0].geometry.location.lat;
-            //var lng = jObject.results[0].geometry.location.lng;
-            //neighborLocation.lat = lat;
-            //neighborLocation.lng = lng;
-            //neighborLocation = JsonConvert.DeserializeObject<Location>(jsonObject); in 
-            //var lat = location["lat"];
-            //var lng = location["lng"];
-            //var stuff = _download_serialized_json_data(url);
+            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
             MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
-            messageIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
+            var shopOwnersSubscribedTo = new List<ShopOwner>();
+            var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
+            var messageIds = new List<int?>();
+            var messages = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode);
+            var messagesToPost = new List<Message>();
+            var messageHashtags = new List<MessageHashtag>();
+            foreach (var m in messages)
+            {
+                messageHashtags = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).ToList();
+            }
+
+            foreach (var h in hashtags)
+            {
+                foreach (var m in messageHashtags)
+                {
+                    if (h.Text == m.Text)
+                    {
+                        if (messageIds.Contains(m.Id))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            messageIds.Add(m.Id);
+                        }
+                    } 
+                }
+            }
+            foreach (var messageId in messageIds)
+            {
+                var message = _context.Messages.Where(m => m.Id == messageId).FirstOrDefault();
+                messagesToPost.Add(message);
+
+            }
+            //foreach(var s in subscriptions)
+            //{
+            //    shopOwnersSubscribedTo.Add(s.ShopOwner);
+            //}
+            //var latLngs = new List<Dictionary<string, double>>();
+            //foreach (var s in shopOwnersSubscribedTo)
+            //{
+            //    latLngs.Add(s.LatLng);
+            //}
+            //var locationsArray = latLngs.ToArray();
+            messageIndexViewModel.Messages = messagesToPost;
             messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
+            messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
             messageIndexViewModel.Neighbor = neighbor;
+            //messageIndexViewModel.LatLngs = locationsArray;
             messageIndexViewModel.Url = url;
             //messageIndexViewModel.Location = neighborLocation;
-            //make zipcode connected to the center of the google map that pops up when the neighbor logs in. get latlong of zipcode.
-
-
-            //var message = _context.Messages.WHere(m => m.Neighbor.ZipCode == neighbor.ZipCode);
-            //var message = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode); 
-            //var applicationDbContext = _context.Messages.Include(m => m.Neighbor);
             return View(messageIndexViewModel);
         }
 
-
-        private static T _download_serialized_json_data<T>(string url) where T : new()
-        {
-            using (var w = new WebClient())
-            {
-                var json_data = string.Empty;
-                // attempt to download JSON data as a string
-                try
-                {
-                    json_data = w.DownloadString(url);
-                }
-                catch (Exception) { }
-                // if string with JSON data is not empty, deserialize it to class and return its instance 
-                return !string.IsNullOrEmpty(json_data) ? JsonConvert.DeserializeObject<T>(json_data) : new T();
-            }
-
-        }
         // GET: Messages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -120,8 +130,9 @@ namespace NeighborhoodBulletin.Controllers
                 message.DateTime = DateTime.Now;
                 _context.Add(message);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "MessageHashtags", new { newMessage = message, messageId = message.Id, });
             }
+            ViewData["MessageId"] = new SelectList(_context.Messages, "Id", "Id", message.Id);
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", message.NeighborId);
             return View(message);
         }

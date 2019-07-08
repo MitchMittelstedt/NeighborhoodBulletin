@@ -135,7 +135,9 @@ namespace NeighborhoodBulletin.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             subscription.NeighborId = neighbor.Id;
+            subscription.Neighbor = neighbor;
             subscription.ShopOwnerId = shopOwnerId;
+            subscription.ShopOwner = _context.ShopOwners.Where(s => s.Id == shopOwnerId).FirstOrDefault();
             subscription.SubscriptionStatus = true;
             var shopOwner = _context.ShopOwners.Where(s => s.Id == subscription.ShopOwnerId).FirstOrDefault(); ;
             var address = _context.ShopOwners.Where(s => s.Id == shopOwnerId).Select(s => s.Address).FirstOrDefault();

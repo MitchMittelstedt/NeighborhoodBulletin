@@ -27,5 +27,8 @@ namespace Domain
         public double Latitude { get; set; }
         [JsonProperty("lng")]
         public double Longitude { get; set; }
+        [JsonProperty("location")]
+        [NotMapped]
+        public Dictionary<string, double> LatLng { get; set; }
     }
 }

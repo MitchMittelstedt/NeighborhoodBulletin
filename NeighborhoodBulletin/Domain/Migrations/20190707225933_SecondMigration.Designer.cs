@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190707165600_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20190707225933_SecondMigration")]
+    partial class SecondMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,6 +155,23 @@ namespace Domain.Migrations
                     b.HasIndex("NeighborId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("Domain.MessageHashtag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("MessageId");
+
+                    b.Property<string>("Text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("MessageHashtags");
                 });
 
             modelBuilder.Entity("Domain.Neighbor", b =>
@@ -371,6 +388,14 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Neighbor", "Neighbor")
                         .WithMany()
                         .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.MessageHashtag", b =>
+                {
+                    b.HasOne("Domain.Message", "Message")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

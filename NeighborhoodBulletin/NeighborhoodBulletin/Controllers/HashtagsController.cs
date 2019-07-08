@@ -64,11 +64,11 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 var hashtagTexts = hashtag.Text.Split(",").ToList();
-                foreach (var s in hashtagTexts)
+                foreach (var h in hashtagTexts)
                 {
                     Hashtag newHashtag = new Hashtag();
                     newHashtag.NeighborId = neighbor.Id;
-                    newHashtag.Text = s;
+                    newHashtag.Text = h;
                     _context.Add(newHashtag);
                     await _context.SaveChangesAsync();
                 }
