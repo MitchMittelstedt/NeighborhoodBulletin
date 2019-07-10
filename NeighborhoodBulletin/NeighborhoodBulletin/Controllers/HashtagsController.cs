@@ -64,14 +64,18 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 var hashtagTexts = hashtag.Text.Split(",").ToList();
+                var hashtagListForNeighbor = new List<string>();
                 foreach (var h in hashtagTexts)
                 {
                     Hashtag newHashtag = new Hashtag();
                     newHashtag.NeighborId = neighbor.Id;
                     newHashtag.Text = h;
+                    hashtagListForNeighbor.Add(h);
                     _context.Add(newHashtag);
                     await _context.SaveChangesAsync();
                 }
+                neighbor.Hashtags = hashtagListForNeighbor;
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Subscriptions");
             }
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", hashtag.NeighborId);

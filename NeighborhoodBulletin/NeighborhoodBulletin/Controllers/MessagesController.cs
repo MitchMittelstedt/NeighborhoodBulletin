@@ -26,46 +26,101 @@ namespace NeighborhoodBulletin.Controllers
 
         // GET: Messages
         public async Task<IActionResult> Index()
-         {
+        {
 
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             var url = $"https://maps.googleapis.com/maps/api/js?key={APIKey.SecretKey}&callback=initMap";
-            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
+            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id).Select(h => h.Text);
             MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
             var shopOwnersSubscribedTo = new List<ShopOwner>();
             var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
             var messageIds = new List<int?>();
-            var messages = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode);
             var messagesToPost = new List<Message>();
             var messageHashtags = new List<MessageHashtag>();
-            foreach (var m in messages)
-            {
-                messageHashtags = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).ToList();
-            }
+            var messagesToUse = new List<Message>();
 
-            foreach (var h in hashtags)
+            messageHashtags = _context.MessageHashtags.ToList();
+
+            //List<MessageIndexViewModel> messageIndexViewModels = new List<MessageIndexViewModel>();
+
+            var messagesInZipCode = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode);//|| m => m.Zipcode == neighbor.OtherZipCodes)
+
+            foreach (var m in messagesInZipCode)
             {
-                foreach (var m in messageHashtags)
+                //MessageIndexViewModel messageIndexViewModelForMessage = new MessageIndexViewModel();
+                //messageIndexViewModelForMessage.Message = m;
+                //messageIndexViewModelForMessage.Message.Hashtags = m.Hashtags;
+                var hashtagsInMessage = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).Select(mH => mH.Text);
+                foreach (var h in hashtags)
                 {
-                    if (h.Text == m.Text)
+                    if (hashtagsInMessage.Contains(h))
                     {
-                        if (messageIds.Contains(m.Id))
+                        if (messagesToPost.Contains(m))
                         {
                             continue;
                         }
                         else
                         {
-                            messageIds.Add(m.Id);
+                            messagesToPost.Add(m);
+                            continue;
                         }
-                    } 
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
-            }
-            foreach (var messageId in messageIds)
-            {
-                var message = _context.Messages.Where(m => m.Id == messageId).FirstOrDefault();
-                messagesToPost.Add(message);
 
+            }
+
+            //    foreach (var mH in messageHashtags)
+            //    {
+
+            //        //if (m.Id == mH.MessageId)
+            //        //{
+            //        //    messagesToUse.Add(m);
+            //        //}
+            //    }
+
+            //    messageHashtags = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).ToList();
+            //}
+
+            //foreach (var h in hashtags)
+            //{
+            //    foreach (var m in messageHashtags)
+            //    {
+            //        if (h.Text == m.Text)
+            //        {
+            //            //if (messageIds.Contains(m.Id))
+            //            //{
+            //            //    continue;
+            //            //}
+            //            //else
+            //            //{
+            //                messageIds.Add(m.MessageId);
+            //            //}
+            //        } 
+            //    }
+            //}
+            //foreach (var messageId in messageIds)
+            //{
+            //    var message = _context.Messages.Where(m => m.Id == messageId).FirstOrDefault();
+            //    messagesToPost.Add(message);
+
+            //}
+
+            var updates = _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).ToList();
+            var updatesToPost = new List<Update>();
+            foreach (var u in updates)
+            {
+                foreach (var s in subscriptions)
+                {
+                    if (u.ShopOwnerId == s.ShopOwnerId)
+                    {
+                        updatesToPost.Add(u);
+                    }
+                }
             }
             //foreach(var s in subscriptions)
             //{
@@ -77,9 +132,9 @@ namespace NeighborhoodBulletin.Controllers
             //    latLngs.Add(s.LatLng);
             //}
             //var locationsArray = latLngs.ToArray();
-            messageIndexViewModel.Messages = messagesToPost;
-            messageIndexViewModel.Updates = await _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).OrderByDescending(m => m.DateTime).ToListAsync();
-            messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
+            messageIndexViewModel.Messages = messagesToPost.OrderByDescending(m => m.DateTime).ToList();
+            messageIndexViewModel.Updates = updatesToPost.OrderByDescending(m => m.DateTime).ToList();
+            //messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
             messageIndexViewModel.Neighbor = neighbor;
             //messageIndexViewModel.LatLngs = locationsArray;
             messageIndexViewModel.Url = url;

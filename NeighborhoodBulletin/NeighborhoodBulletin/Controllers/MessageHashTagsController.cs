@@ -67,10 +67,14 @@ namespace NeighborhoodBulletin.Controllers
                 var messageHashtagTexts = messageHashtag.Text.Split(",").ToList();
                 var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id).ToList();
                 var hashtagTexts = _context.Hashtags.Select(h => h.Text).ToList();
+                var hashtagListForMessage = new List<string>();
                 foreach (var m in messageHashtagTexts)
                 {
+
                     MessageHashtag newMessageHashtag = new MessageHashtag();
                     newMessageHashtag.MessageId = messageHashtag.MessageId;
+
+                    hashtagListForMessage.Add(m);
                     newMessageHashtag.Text = m;
                     _context.Add(newMessageHashtag);
                     await _context.SaveChangesAsync();
@@ -87,7 +91,10 @@ namespace NeighborhoodBulletin.Controllers
                         await _context.SaveChangesAsync();
                     }
 
+
                 }
+                Message message = _context.Messages.Where(m => m.Id == messageHashtag.MessageId).FirstOrDefault();
+                message.Hashtags = hashtagListForMessage;
                 return RedirectToAction("Index", "Messages");
             }
             ViewData["MessageId"] = new SelectList(_context.Messages, "Id", "Id", messageHashtag.MessageId);

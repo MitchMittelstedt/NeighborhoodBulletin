@@ -20,6 +20,8 @@ namespace Domain
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+        [NotMapped]
+        public List<string> Hashtags { get; set; }
         [JsonProperty("lat")]
         public double Latitude { get; set; }
         [JsonProperty("lng")]

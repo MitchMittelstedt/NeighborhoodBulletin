@@ -78,7 +78,7 @@ namespace NeighborhoodBulletin.Controllers
                 //javascript 
                 //Location neighborLocation = new Location();
                 var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
-
+                neighbor.Hashtags = new List<string>();
                 neighbor.Latitude = nLocation.results[0].geometry.location.lat;
                 neighbor.Longitude = nLocation.results[0].geometry.location.lng;
                 _context.Add(neighbor);

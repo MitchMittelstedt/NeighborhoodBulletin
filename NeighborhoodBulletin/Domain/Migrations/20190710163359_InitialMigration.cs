@@ -333,6 +333,26 @@ namespace Domain.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MessageHashtags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(nullable: true),
+                    MessageId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageHashtags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MessageHashtags_Messages_MessageId",
+                        column: x => x.MessageId,
+                        principalTable: "Messages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -376,6 +396,11 @@ namespace Domain.Migrations
                 name: "IX_Hashtags_NeighborId",
                 table: "Hashtags",
                 column: "NeighborId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MessageHashtags_MessageId",
+                table: "MessageHashtags",
+                column: "MessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_NeighborId",
@@ -437,7 +462,7 @@ namespace Domain.Migrations
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "MessageHashtags");
 
             migrationBuilder.DropTable(
                 name: "ShopHashtags");
@@ -452,10 +477,13 @@ namespace Domain.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Neighbors");
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "ShopOwners");
+
+            migrationBuilder.DropTable(
+                name: "Neighbors");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
