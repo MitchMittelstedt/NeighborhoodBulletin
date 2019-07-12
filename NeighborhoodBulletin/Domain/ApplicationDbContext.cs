@@ -19,6 +19,7 @@ namespace Domain
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<MessageHashtag> MessageHashtags { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<ZipCode> ZipCodes { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

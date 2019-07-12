@@ -203,7 +203,7 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 shopOwner.ApplicationUserId = userId;
                 var addressString = $"{shopOwner.Address}+{shopOwner.City}+{shopOwner.State}+{shopOwner.ZipCode}";
-                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={addressString}&key={APIKey.SecretKey}&callback=initMap";
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={addressString}&key={APIKey.SecretKey}";
                 var jsonObject = new WebClient().DownloadString(url);
                 var shopOwnerLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
 

@@ -73,7 +73,7 @@ namespace NeighborhoodBulletin.Controllers
                 var zipcode = neighbor.ZipCode;
 
 
-                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={zipcode}&key={APIKey.SecretKey}&callback=initMap";
+                var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={zipcode}&key={APIKey.SecretKey}";
                 var jsonObject = new WebClient().DownloadString(url);
                 //javascript 
                 //Location neighborLocation = new Location();

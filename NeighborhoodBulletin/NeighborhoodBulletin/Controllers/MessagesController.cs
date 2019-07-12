@@ -37,14 +37,20 @@ namespace NeighborhoodBulletin.Controllers
             var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
             var messageIds = new List<int?>();
             var messagesToPost = new List<Message>();
+            var nonlocalMessagesToPost = new List<Message>();
             var messageHashtags = new List<MessageHashtag>();
             var messagesToUse = new List<Message>();
+            var messagesOutsideZipCode = new List<Message>();
 
             messageHashtags = _context.MessageHashtags.ToList();
 
             //List<MessageIndexViewModel> messageIndexViewModels = new List<MessageIndexViewModel>();
 
             var messagesInZipCode = _context.Messages.Where(m => m.ZipCode == neighbor.ZipCode);//|| m => m.Zipcode == neighbor.OtherZipCodes)
+
+
+            //check if hashtags match yours
+            //then post
 
             foreach (var m in messagesInZipCode)
             {
@@ -72,6 +78,37 @@ namespace NeighborhoodBulletin.Controllers
                     }
                 }
 
+            }
+
+            var outsideZipCodes = _context.ZipCodes.Where(z => z.NeighborId == neighbor.Id).ToList();
+
+            foreach (var o in outsideZipCodes)
+            {
+                messagesOutsideZipCode = _context.Messages.Where(m => m.ZipCode == o.NonLocalZipCode).ToList();
+            }
+
+            foreach (var m in messagesOutsideZipCode)
+            {
+                var hashtagsInMessage = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).Select(mH => mH.Text);
+                foreach (var h in hashtags)
+                {
+                    if (hashtagsInMessage.Contains(h))
+                    {
+                        if (nonlocalMessagesToPost.Contains(m))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            nonlocalMessagesToPost.Add(m);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
             }
 
             //    foreach (var mH in messageHashtags)
@@ -122,22 +159,30 @@ namespace NeighborhoodBulletin.Controllers
                     }
                 }
             }
-            //foreach(var s in subscriptions)
-            //{
-            //    shopOwnersSubscribedTo.Add(s.ShopOwner);
-            //}
-            //var latLngs = new List<Dictionary<string, double>>();
-            //foreach (var s in shopOwnersSubscribedTo)
-            //{
-            //    latLngs.Add(s.LatLng);
-            //}
-            //var locationsArray = latLngs.ToArray();
+            foreach (var s in subscriptions)
+            {
+                shopOwnersSubscribedTo = _context.ShopOwners.Where(sh => sh.Id == s.ShopOwnerId).ToList();
+            }
+            var jArray = JArray.FromObject(shopOwnersSubscribedTo);
+            var latLngs = new List<Dictionary<string, double>>();
+
+            foreach (var s in shopOwnersSubscribedTo)
+            {
+                var locationDictionary = new Dictionary<string,double>();
+                locationDictionary.Add("lat", s.Latitude);
+                locationDictionary.Add("lng", s.Longitude);
+                latLngs.Add(locationDictionary);
+            }
+            var locationsArray = latLngs.ToArray();
+            messageIndexViewModel.Neighbor = neighbor;
             messageIndexViewModel.Messages = messagesToPost.OrderByDescending(m => m.DateTime).ToList();
             messageIndexViewModel.Updates = updatesToPost.OrderByDescending(m => m.DateTime).ToList();
-            //messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
-            messageIndexViewModel.Neighbor = neighbor;
-            //messageIndexViewModel.LatLngs = locationsArray;
+            messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
+            messageIndexViewModel.LatLngs = locationsArray;
+            messageIndexViewModel.ShopOwnersArray = jArray;
             messageIndexViewModel.Url = url;
+            messageIndexViewModel.ZipCodes = outsideZipCodes;
+            messageIndexViewModel.MessagesOutsideZipCode = nonlocalMessagesToPost;
             //messageIndexViewModel.Location = neighborLocation;
             return View(messageIndexViewModel);
         }
