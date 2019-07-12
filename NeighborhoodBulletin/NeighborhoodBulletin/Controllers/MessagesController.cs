@@ -209,7 +209,10 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Messages/Create
         public IActionResult Create()
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id");
+            ViewData["ZipCode"] = new SelectList(_context.ZipCodes, "Id", "Id", neighbor.ZipCode);
             return View();
         }
 
@@ -218,17 +221,25 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode")] Message message)
         {
             if (ModelState.IsValid)
             {
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 message.NeighborId = neighbor.Id;
-                message.ZipCode = neighbor.ZipCode;
+                //message.ZipCode = neighbor.ZipCode;
                 message.Username = neighbor.Username;
                 message.DateTime = DateTime.Now;
                 _context.Add(message);
+                var nonlocalZipCodes = _context.ZipCodes.Where(z => z.NeighborId == neighbor.Id).Select(z => z.NonLocalZipCode).ToList();
+                if (message.ZipCode != neighbor.ZipCode && !nonlocalZipCodes.Contains(message.ZipCode))
+                {
+                    var zipCode = new ZipCode();
+                    zipCode.NeighborId = neighbor.Id;
+                    zipCode.NonLocalZipCode = message.ZipCode;
+                    _context.Add(zipCode);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "MessageHashtags", new { newMessage = message, messageId = message.Id, });
             }
