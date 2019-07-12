@@ -86,10 +86,10 @@ namespace NeighborhoodBulletin.Controllers
             {
                 messagesOutsideZipCode = _context.Messages.Where(m => m.ZipCode == o.NonLocalZipCode).ToList();
             }
-
+            
             foreach (var m in messagesOutsideZipCode)
             {
-                var hashtagsInMessage = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).Select(mH => mH.Text);
+                var hashtagsInMessage = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).Select(mH => mH.Text).ToList();
                 foreach (var h in hashtags)
                 {
                     if (hashtagsInMessage.Contains(h))
@@ -182,7 +182,7 @@ namespace NeighborhoodBulletin.Controllers
             messageIndexViewModel.ShopOwnersArray = jArray;
             messageIndexViewModel.Url = url;
             messageIndexViewModel.ZipCodes = outsideZipCodes;
-            messageIndexViewModel.MessagesOutsideZipCode = nonlocalMessagesToPost;
+            messageIndexViewModel.MessagesOutsideZipCode = nonlocalMessagesToPost.OrderByDescending(m => m.DateTime).ToList();
             //messageIndexViewModel.Location = neighborLocation;
             return View(messageIndexViewModel);
         }
@@ -228,7 +228,7 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                 message.NeighborId = neighbor.Id;
-                //message.ZipCode = neighbor.ZipCode;
+                message.NeighborZipCode = neighbor.ZipCode;
                 message.Username = neighbor.Username;
                 message.DateTime = DateTime.Now;
                 _context.Add(message);

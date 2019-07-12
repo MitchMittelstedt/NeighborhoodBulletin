@@ -31,7 +31,7 @@
 
 
 
-    <h2 id="header">Local Discussion</h2>
+    <h2 id="header">local posts</h2>
 
     <p>
 
@@ -43,9 +43,9 @@
         <thead>
             <tr>
                 @*
-                    <th>
-                        @Html.DisplayNameFor(model => model.Neighbor)
-                    </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Neighbor)
+        </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Message.Username)
                 </th>
@@ -89,7 +89,7 @@
         </tbody>
     </table>
 
-    <h2 id="header">NonLocal Discussion</h2>
+    <h2 id="header">nonlocal posts</h2>
 
     @*<p>
 
@@ -108,6 +108,9 @@
                     @Html.DisplayNameFor(model => model.Message.Username)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Message.NeighborZipCode)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Message.Text)
                 </th>
                 <th>
@@ -122,39 +125,50 @@
         <tbody>
             @foreach (var item in Model.MessagesOutsideZipCode)
             {
-                <tr>
-                    @*
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Neighbor.Id)
-                        </td>*@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Username)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Text)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ZipCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateTime)
-                    </td>
-                    @if (item.NeighborId == Model.Neighbor.Id)
+            <tr>
+                @*
+        <td>
+            @Html.DisplayFor(modelItem => item.Neighbor.Id)
+        </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @if(item.NeighborZipCode != Model.Neighbor.ZipCode)
                     {
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-
+                        Write("nonlocal");
                     }
-                </tr>
+                    else
+                    {
+                        Write("local");
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Text)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+
+                @if (item.NeighborId == Model.Neighbor.Id)
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+
+                }
+            </tr>
             }
         </tbody>
     </table>
 
 
-    <h2 id="header">Local Businesses (your Subscriptions)</h2>
+    <h2 id="header">local business updates</h2>
 
     <table class="table">
         <thead>

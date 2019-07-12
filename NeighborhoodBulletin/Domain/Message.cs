@@ -14,6 +14,8 @@ namespace Domain
         public int NeighborId { get; set; }
         public virtual Neighbor Neighbor { get; set; }
         public int ZipCode { get; set; }
+        [Display(Name = "User Locality")]
+        public int NeighborZipCode { get; set; }
         public string Username { get; set; }
         public string Text { get; set; }
         [NotMapped]

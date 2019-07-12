@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190712144102_SecondMigration")]
-    partial class SecondMigration
+    [Migration("20190712190258_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,6 +143,8 @@ namespace Domain.Migrations
                     b.Property<DateTime>("DateTime");
 
                     b.Property<int>("NeighborId");
+
+                    b.Property<int>("NeighborZipCode");
 
                     b.Property<string>("Text");
 

@@ -142,6 +142,8 @@ namespace Domain.Migrations
 
                     b.Property<int>("NeighborId");
 
+                    b.Property<int>("NeighborZipCode");
+
                     b.Property<string>("Text");
 
                     b.Property<string>("Username");

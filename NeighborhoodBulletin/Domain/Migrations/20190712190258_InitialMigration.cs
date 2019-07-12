@@ -247,6 +247,7 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     NeighborId = table.Column<int>(nullable: false),
                     ZipCode = table.Column<int>(nullable: false),
+                    NeighborZipCode = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
                     DateTime = table.Column<DateTime>(nullable: false)
@@ -256,6 +257,26 @@ namespace Domain.Migrations
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Messages_Neighbors_NeighborId",
+                        column: x => x.NeighborId,
+                        principalTable: "Neighbors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ZipCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NonLocalZipCode = table.Column<int>(nullable: false),
+                    NeighborId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ZipCodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ZipCodes_Neighbors_NeighborId",
                         column: x => x.NeighborId,
                         principalTable: "Neighbors",
                         principalColumn: "Id",
@@ -436,6 +457,11 @@ namespace Domain.Migrations
                 name: "IX_Updates_ShopOwnerId",
                 table: "Updates",
                 column: "ShopOwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ZipCodes_NeighborId",
+                table: "ZipCodes",
+                column: "NeighborId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -472,6 +498,9 @@ namespace Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "Updates");
+
+            migrationBuilder.DropTable(
+                name: "ZipCodes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
