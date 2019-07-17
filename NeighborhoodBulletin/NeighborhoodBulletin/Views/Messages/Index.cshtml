@@ -25,6 +25,8 @@
     </style>
 </head>
 <body>
+    <br>
+    <br>
     <div id="map" style="height:400px; width:100%;"></div>
 
 
@@ -184,7 +186,7 @@
                     @Html.DisplayNameFor(model => model.Update.Text)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Update.DateTime)
+                    @Html.DisplayNameFor(model => model.Update.StartDate)
                 </th>
                 <th></th>
             </tr>
@@ -204,7 +206,7 @@
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DateTime)
+                        @Html.DisplayFor(modelItem => item.StartDate)
                     </td>
                     @*@if (item.ShopOwnerId == Model.Neighbor.Id)
                         {

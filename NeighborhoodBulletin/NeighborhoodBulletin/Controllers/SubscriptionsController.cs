@@ -28,9 +28,13 @@ namespace NeighborhoodBulletin.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
             var shopOwners = new List<ShopOwner>();
+            var nonlocalShopOwners = new List<ShopOwner>();
             var shopOwnersInZip = _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode);
+            var zipCodeList = await _context.ZipCodes.Where(z => z.NeighborId == neighbor.Id).ToListAsync();
             var shopHashtags = _context.ShopHashtags.Where(s => s.ZipCode == neighbor.ZipCode);
+            var allShopHashtags = _context.ShopHashtags;
             var shopOwnerIds = new List<int>();
+            var nonlocalShopOwnerIds = new List<int?>();
             var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
             var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
             foreach (var h in hashtags)
@@ -83,7 +87,66 @@ namespace NeighborhoodBulletin.Controllers
 
             List<ShopOwnerSubscriptionViewModel> shopOwnerSubscriptionViewModelList = new List<ShopOwnerSubscriptionViewModel>();
 
+            var allShopOwners = await _context.ShopOwners.ToListAsync();
+            List<ShopOwner> shopOwnersInNonlocalZipCodes = new List<ShopOwner>();
             var shopOwnersList = await _context.ShopOwners.Where(s => s.ZipCode == neighbor.ZipCode).ToListAsync();
+            foreach(var z in zipCodeList)
+            {
+                foreach(var s in allShopOwners)
+                {
+                    if(z.NonLocalZipCode == s.ZipCode)
+                    {
+                        shopOwnersInNonlocalZipCodes.Add(s);
+                    }
+                }
+
+            }
+
+            var nonlocalShopHashtags = new List<ShopHashtag>();
+            foreach(var s in allShopHashtags)
+            {
+                foreach(var z in zipCodeList)
+                {
+                    if (s.ZipCode == z.NonLocalZipCode)
+                    {
+                        nonlocalShopHashtags.Add(s);
+                    }
+                }
+
+            }
+
+            foreach(var s in nonlocalShopHashtags)
+            {
+                foreach (var h in hashtags)
+                {
+                    if (s.Text == h.Text)
+                    {
+                        var nonlocalShopOwnerId = s.ShopOwnerId;
+                        if(nonlocalShopOwnerIds.Contains(nonlocalShopOwnerId))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            nonlocalShopOwnerIds.Add(nonlocalShopOwnerId);
+                        }
+                    }
+                }
+                
+            }
+
+            foreach(var i in nonlocalShopOwnerIds)
+            {
+                var nonlocalShopOwner = _context.ShopOwners.Where(s => s.Id == i).FirstOrDefault();
+                if(nonlocalShopOwners.Contains(nonlocalShopOwner))
+                {
+                    continue;
+                }
+                else
+                {
+                    nonlocalShopOwners.Add(nonlocalShopOwner);
+                }
+            }
 
             foreach (ShopOwner shopOwner in shopOwnersList)
             {
@@ -101,10 +164,23 @@ namespace NeighborhoodBulletin.Controllers
                 shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModelForShopOwner);
             }
 
-
-
-                //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);  
-                return View(shopOwnerSubscriptionViewModelList);
+            foreach (ShopOwner nonlocalShopOwner in nonlocalShopOwners)
+            {
+                ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModelForNonlocalShopOwner = new ShopOwnerSubscriptionViewModel();
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.NonlocalShopOwner = nonlocalShopOwner;
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.NonlocalShopOwners = nonlocalShopOwners;
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.Neighbor = neighbor;
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.Subscriptions = subscriptions;
+                foreach (var s in subscriptions)
+                {
+                    shopOwnerSubscriptionViewModelForNonlocalShopOwner.Subscription = s;
+                }
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.Subscribed = _context.Subscriptions.Where(s => s.ShopOwnerId == nonlocalShopOwner.Id && s.NeighborId == neighbor.Id).Select(s => s.SubscriptionStatus).SingleOrDefault();
+                shopOwnerSubscriptionViewModelForNonlocalShopOwner.NonlocalShopOwnerIds = nonlocalShopOwnerIds;
+                shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModelForNonlocalShopOwner);
+            }
+            //var applicationDbContext = _context.ShopOwners.Include(s => s.ApplicationUser);  
+            return View(shopOwnerSubscriptionViewModelList);
 
             
         }

@@ -17,8 +17,12 @@ namespace Domain
         [Display(Name = "Business Name")]
         public string BusinessName { get; set; }
         public string Text { get; set; }
-        [Display(Name = "Date Posted")]
-        public DateTime DateTime { get; set; }
+        [Display(Name = "Start Date")]
+        public DateTime StartDate { get; set; }
+        [Display(Name = "End Date")]
+        public DateTime EndDate { get; set; }
+        public bool Valid { get; set; }
+
 
     }
 }

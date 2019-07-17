@@ -1,50 +1,184 @@
-﻿@model IEnumerable<Domain.Update>
+﻿@model NeighborhoodBulletin.Models.UpdateIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <br>
+    <br>
+    <h1>your updates</h1>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            @*<th>
+    <h2 id="header" class="active">active</h2>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.ShopOwner)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.Text)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.EndDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Updates)
+            {
+                <tr>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2 id="header">scheduled</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                @*<th>
             @Html.DisplayNameFor(model => model.ShopOwner)
         </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateTime)
-            </th>
-
-
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @*<td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.Text)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.EndDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ScheduledUpdates)
+            {
+            <tr>
+                @*<td>
             @Html.DisplayFor(modelItem => item.ShopOwner.Id)
         </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Text)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZipCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+
+
+
+
+
+    <h2 id="header">archive</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                @*<th>
+            @Html.DisplayNameFor(model => model.ShopOwner)
+        </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.Text)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.ZipCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.StartDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Update.EndDate)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AllUpdates)
+            {
+            
+                <tr>
+                    @*<td>
+                    @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+            
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+
+</body>
+</html>

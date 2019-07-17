@@ -26,12 +26,83 @@ namespace NeighborhoodBulletin.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
             var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
             UpdateIndexViewModel updateIndexViewModel = new UpdateIndexViewModel();
-            updateIndexViewModel.Updates = await _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id).ToListAsync();
+            var updatesBeforeDateCheck = await _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id).ToListAsync();
+            var currentUpdates = CurrentUpdates(updatesBeforeDateCheck);
+            var pastUpdates = PastUpdates(updatesBeforeDateCheck);
+            var scheduledUpdates = ScheduledUpdates(updatesBeforeDateCheck);
+            updateIndexViewModel.Updates = currentUpdates.OrderByDescending(u => u.StartDate).ToList();
+            updateIndexViewModel.AllUpdates = pastUpdates.OrderByDescending(u => u.StartDate).ToList();
+            updateIndexViewModel.ScheduledUpdates = scheduledUpdates.OrderByDescending(u => u.StartDate).ToList(); ;
             updateIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == shopOwner.ZipCode).ToListAsync();
             var messages = _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id);
             //var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
-            return View(await messages.ToListAsync());
+            return View(updateIndexViewModel);
         }
+
+        public List<Update> CurrentUpdates(List<Update> updates)
+        {
+            var newUpdates = new List<Update>();
+            foreach(var u in updates)
+            {
+                if(u.EndDate <= DateTime.Now || u.StartDate > DateTime.Now)
+                {
+                    u.Valid = false;
+                }
+                else
+                {
+                    u.Valid = true;
+                }
+                if(u.Valid)
+                {
+                    newUpdates.Add(u);
+                }
+            }
+            return newUpdates;
+
+        }
+        public List<Update> PastUpdates(List<Update> updates)
+        {
+            var pastUpdates = new List<Update>();
+            foreach(var u in updates)
+            {
+                if (u.EndDate <= DateTime.Now || u.StartDate > DateTime.Now)
+                {
+                    u.Valid = false;
+                }
+                else
+                {
+                    u.Valid = true;
+                }
+                if (!u.Valid && u.StartDate < DateTime.Now && u.EndDate < DateTime.Now)
+                {
+
+                    pastUpdates.Add(u);
+                }
+            }
+            return pastUpdates;
+        }
+        public List<Update> ScheduledUpdates(List<Update> updates)
+        {
+            var scheduledUpdates = new List<Update>();
+            foreach (var u in updates)
+            {
+                if (u.EndDate <= DateTime.Now || u.StartDate > DateTime.Now)
+                {
+                    u.Valid = false;
+                }
+                else
+                {
+                    u.Valid = true;
+                }
+                if (!u.Valid && u.StartDate > DateTime.Now && u.EndDate > DateTime.Now)
+                {
+
+                    scheduledUpdates.Add(u);
+                }
+            }
+            return scheduledUpdates;
+        }
+
 
         // GET: Updates/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -64,7 +135,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text")] Update update)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate")] Update update)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +144,10 @@ namespace NeighborhoodBulletin.Controllers
                 update.ShopOwnerId = shopOwner.Id;
                 update.ZipCode = shopOwner.ZipCode;
                 update.BusinessName = shopOwner.BusinessName;
-                update.DateTime = DateTime.Now;
+                if (update.StartDate > update.EndDate)
+                {
+                    return View();
+                }
                 _context.Add(update);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

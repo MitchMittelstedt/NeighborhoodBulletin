@@ -274,11 +274,15 @@ namespace Domain.Migrations
 
                     b.Property<string>("BusinessName");
 
-                    b.Property<DateTime>("DateTime");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<int>("ShopOwnerId");
 
+                    b.Property<DateTime>("StartDate");
+
                     b.Property<string>("Text");
+
+                    b.Property<bool>("Valid");
 
                     b.Property<int>("ZipCode");
 

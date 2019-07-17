@@ -84,7 +84,12 @@ namespace NeighborhoodBulletin.Controllers
 
             foreach (var o in outsideZipCodes)
             {
-                messagesOutsideZipCode = _context.Messages.Where(m => m.ZipCode == o.NonLocalZipCode).ToList();
+                var messagesPerZipCode = _context.Messages.Where(m => m.ZipCode == o.NonLocalZipCode).ToList();
+                foreach(var m in messagesPerZipCode)
+                {
+                    messagesOutsideZipCode.Add(m);
+                }
+
             }
             
             foreach (var m in messagesOutsideZipCode)
@@ -148,17 +153,19 @@ namespace NeighborhoodBulletin.Controllers
             //}
 
             var updates = _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).ToList();
-            var updatesToPost = new List<Update>();
+            var updatesToValidate = new List<Update>();
             foreach (var u in updates)
             {
                 foreach (var s in subscriptions)
                 {
                     if (u.ShopOwnerId == s.ShopOwnerId)
                     {
-                        updatesToPost.Add(u);
+                        updatesToValidate.Add(u);
                     }
                 }
             }
+            var updatesToPost = ValidityCheck(updatesToValidate);
+
             foreach (var s in subscriptions)
             {
                 shopOwnersSubscribedTo = _context.ShopOwners.Where(sh => sh.Id == s.ShopOwnerId).ToList();
@@ -176,7 +183,7 @@ namespace NeighborhoodBulletin.Controllers
             var locationsArray = latLngs.ToArray();
             messageIndexViewModel.Neighbor = neighbor;
             messageIndexViewModel.Messages = messagesToPost.OrderByDescending(m => m.DateTime).ToList();
-            messageIndexViewModel.Updates = updatesToPost.OrderByDescending(m => m.DateTime).ToList();
+            messageIndexViewModel.Updates = updatesToPost.OrderByDescending(m => m.StartDate).ToList();
             messageIndexViewModel.ShopOwners = shopOwnersSubscribedTo;
             messageIndexViewModel.LatLngs = locationsArray;
             messageIndexViewModel.ShopOwnersArray = jArray;
@@ -185,6 +192,28 @@ namespace NeighborhoodBulletin.Controllers
             messageIndexViewModel.MessagesOutsideZipCode = nonlocalMessagesToPost.OrderByDescending(m => m.DateTime).ToList();
             //messageIndexViewModel.Location = neighborLocation;
             return View(messageIndexViewModel);
+        }
+
+        public List<Update> ValidityCheck(List<Update> updates)
+        {
+            var newUpdates = new List<Update>();
+            foreach (var u in updates)
+            {
+                if (u.EndDate <= DateTime.Now || u.StartDate > DateTime.Now)
+                {
+                    u.Valid = false;
+                }
+                else
+                {
+                    u.Valid = true;
+                }
+                if (u.Valid)
+                {
+                    newUpdates.Add(u);
+                }
+            }
+            return newUpdates;
+
         }
 
         // GET: Messages/Details/5
