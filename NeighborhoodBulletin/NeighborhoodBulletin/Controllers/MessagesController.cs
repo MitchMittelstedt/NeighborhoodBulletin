@@ -165,10 +165,16 @@ namespace NeighborhoodBulletin.Controllers
                 }
             }
             var updatesToPost = ValidityCheck(updatesToValidate);
-
+            var shopOwners = _context.ShopOwners.ToList();
             foreach (var s in subscriptions)
             {
-                shopOwnersSubscribedTo = _context.ShopOwners.Where(sh => sh.Id == s.ShopOwnerId).ToList();
+                foreach (var sO in shopOwners)
+                {
+                    if (s.ShopOwnerId == sO.Id)
+                    {
+                        shopOwnersSubscribedTo.Add(sO);
+                    }
+                }
             }
             var jArray = JArray.FromObject(shopOwnersSubscribedTo);
             var latLngs = new List<Dictionary<string, double>>();
