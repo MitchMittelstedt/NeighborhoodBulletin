@@ -9,10 +9,30 @@ body {
     background-attachment: fixed;
     background-position: center;
     font-size: large;
+
+
     
     /*z-index: -10;
     text-align: center;
     text-emphasis-color: azure;*/
+}
+.date-and-zip {
+    width:350px;
+
+}
+
+
+
+.edit-details-delete {
+    width: 200px;
+    vertical-align: middle;
+    display: table-cell;
+    min-height: 10em;
+}
+
+table {
+    background-color: burlywood;
+
 }
 
 .body-content {
@@ -20,4 +40,18 @@ body {
     padding-right: 15px;
 }
 
+.message-content {
+    height: 300px;
+}
 
+.active {
+    color: forestgreen;
+}
+
+.scheduled {
+    color:cadetblue
+}
+
+.archive {
+    color:crimson;
+}

@@ -9,7 +9,7 @@ namespace NeighborhoodBulletin.Models
 {
     public class MessageIndexViewModel
     {
-        public Neighbor Neighbor {  get; set; }
+        public Neighbor Neighbor { get; set; }
         public List<Message> Messages { get; set; }
         public Message Message { get; set; }
         public ShopOwner ShopOwner { get; set; }
@@ -22,6 +22,7 @@ namespace NeighborhoodBulletin.Models
         public Subscription Subscription { get; set; }
         public List<ZipCode> ZipCodes { get; set; }
         public List<Message> MessagesOutsideZipCode { get; set; }
+        public List<Update> UpdatesOutsideZipCode { get; set; }
         public Dictionary<string, double>[] LatLngs { get; set; }
     }
 }

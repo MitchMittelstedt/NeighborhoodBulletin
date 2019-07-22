@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Domain;
 using System.Security.Claims;
 using NeighborhoodBulletin.Models;
+using Newtonsoft.Json.Linq;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -34,7 +35,42 @@ namespace NeighborhoodBulletin.Controllers
             updateIndexViewModel.AllUpdates = pastUpdates.OrderByDescending(u => u.StartDate).ToList();
             updateIndexViewModel.ScheduledUpdates = scheduledUpdates.OrderByDescending(u => u.StartDate).ToList(); ;
             updateIndexViewModel.Messages = await _context.Messages.Where(m => m.ZipCode == shopOwner.ZipCode).ToListAsync();
-            var messages = _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id);
+            updateIndexViewModel.ShopOwner = shopOwner;
+            var messagesOutsideZipCode = new List<Message>();
+            var shopOwnerZipCodes = _context.OutsideShopOwnerZipCodes.Where(o => o.ShopOwnerId == shopOwner.Id);
+            foreach (var s in shopOwnerZipCodes)
+            {
+                var messagesPerZipCode = _context.Messages.Where(m => m.ZipCode == s.NonlocalZipCode).ToList();
+                foreach (var m in messagesPerZipCode)
+                {
+                    messagesOutsideZipCode.Add(m);
+                }
+            }
+            updateIndexViewModel.MessagesOutsideZipCode = messagesOutsideZipCode;
+            var subscriberNeighborIds = _context.Subscriptions.Where(s => s.ShopOwnerId == shopOwner.Id).Select(s => s.NeighborId).ToList();
+            var subscriberZipCodes = new List<int>();
+            foreach (var s in subscriberNeighborIds)
+            {
+                var neighbor = _context.Neighbors.Where(n => n.Id == s).Select(n => n.ZipCode).FirstOrDefault();
+                subscriberZipCodes.Add(neighbor);
+            }
+            updateIndexViewModel.SubscriberZipCodes = subscriberZipCodes;
+            var frequency = subscriberZipCodes.GroupBy(s => s).ToDictionary(s => s.Key, s => s.Count());
+            var zipCodes = new List<int>();
+            var frequencies = new List<int>();
+
+            foreach (var f in frequency)
+            {
+                var zipCode = f.Key;
+                zipCodes.Add(zipCode);
+                var zipCodeFrequency = f.Value;
+                frequencies.Add(zipCodeFrequency);
+            }
+            var zipCodesArray = JArray.FromObject(zipCodes);
+            var frequenciesArray = JArray.FromObject(frequencies);
+            updateIndexViewModel.ZipCodes = zipCodes.ToArray();
+            updateIndexViewModel.Frequencies = frequencies.ToArray();
+            //var messages = _context.Updates.Where(u => u.ShopOwnerId == shopOwner.Id);
             //var applicationDbContext = _context.Updates.Include(u => u.ShopOwner);
             return View(updateIndexViewModel);
         }
@@ -142,7 +178,14 @@ namespace NeighborhoodBulletin.Controllers
                 var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
                 update.ShopOwnerId = shopOwner.Id;
-                update.ZipCode = shopOwner.ZipCode;
+                if(update.ZipCode != shopOwner.ZipCode)
+                {
+                    OutsideShopOwnerZipCode zipCode = new OutsideShopOwnerZipCode();
+                    zipCode.ShopOwnerId = shopOwner.Id;
+                    zipCode.NonlocalZipCode = update.ZipCode;
+                    _context.Add(zipCode);
+                }
+                //update.ZipCode = shopOwner.ZipCode;
                 update.BusinessName = shopOwner.BusinessName;
                 if (update.StartDate > update.EndDate)
                 {

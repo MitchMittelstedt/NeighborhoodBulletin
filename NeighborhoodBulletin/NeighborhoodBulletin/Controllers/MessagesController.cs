@@ -41,6 +41,8 @@ namespace NeighborhoodBulletin.Controllers
             var messageHashtags = new List<MessageHashtag>();
             var messagesToUse = new List<Message>();
             var messagesOutsideZipCode = new List<Message>();
+            var updatesOutsideZipCode = new List<Update>();
+
 
             messageHashtags = _context.MessageHashtags.ToList();
 
@@ -89,9 +91,14 @@ namespace NeighborhoodBulletin.Controllers
                 {
                     messagesOutsideZipCode.Add(m);
                 }
+                var updatesPerZipCode = _context.Updates.Where(u => u.ZipCode == o.NonLocalZipCode).ToList();
+                foreach(var u in updatesPerZipCode)
+                {
+                    updatesOutsideZipCode.Add(u);
+                }
 
             }
-            
+
             foreach (var m in messagesOutsideZipCode)
             {
                 var hashtagsInMessage = _context.MessageHashtags.Where(mH => mH.MessageId == m.Id).Select(mH => mH.Text).ToList();
@@ -115,7 +122,18 @@ namespace NeighborhoodBulletin.Controllers
                     }
                 }
             }
-
+            var nonlocalUpdatesToValidate = new List<Update>();
+            foreach(var u in updatesOutsideZipCode)
+            {
+                foreach(var s in subscriptions)
+                {
+                    if (u.ShopOwnerId == s.ShopOwnerId && u.ZipCode == neighbor.ZipCode)
+                    {
+                        nonlocalUpdatesToValidate.Add(u);
+                    }
+                }
+            }
+            var nonlocalUpdatesToPost = ValidityCheck(nonlocalUpdatesToValidate);
             //    foreach (var mH in messageHashtags)
             //    {
 
@@ -196,6 +214,7 @@ namespace NeighborhoodBulletin.Controllers
             messageIndexViewModel.Url = url;
             messageIndexViewModel.ZipCodes = outsideZipCodes;
             messageIndexViewModel.MessagesOutsideZipCode = nonlocalMessagesToPost.OrderByDescending(m => m.DateTime).ToList();
+            messageIndexViewModel.UpdatesOutsideZipCode = nonlocalUpdatesToPost.OrderByDescending(u => u.StartDate).ToList();
             //messageIndexViewModel.Location = neighborLocation;
             return View(messageIndexViewModel);
         }
