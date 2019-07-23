@@ -197,11 +197,23 @@
             map = new google.maps.Map(document.getElementById('map'), myOptions);
             ShopOwnerMarkers();
         }
+        @*var labels = [];
+        var labelIndex = 0;
+
+        @foreach(var item in Model.ShopOwners)
+        {
+            <text>
+            var businessName = @item.BusinessName;
+            labels.push(businessName);
+            </text>
+        }*@
+
 
         // Function for adding a marker to the page.
-        function addMarker(location) {
+        function addMarker(location, label) {
             marker = new google.maps.Marker({
                 position: location,
+                label: label,
                 map: map
             });
         }
@@ -212,18 +224,19 @@
             {
                 <text>
                 var shopOwnerLocation = new google.maps.LatLng(@item.Latitude, @item.Longitude);
-                addMarker(shopOwnerLocation);
+                var businessName = "@item.BusinessName";
+                addMarker(shopOwnerLocation, businessName);
                 </text>
             }
         }
 
-                //shopOwners.forEach(element =>
-                //{
-                //    var latitude = element.Latitude;
-                //    var longitude = element.Longitude;
-                //    shopOwnerlocation = new google.maps.LatLng(latitude, longitude);
-                //    addMarker(shopOwnerLocation);
-                //});
+        //shopOwners.forEach(element =>
+        //{
+        //    var latitude = element.Latitude;
+        //    var longitude = element.Longitude;
+        //    shopOwnerlocation = new google.maps.LatLng(latitude, longitude);
+        //    addMarker(shopOwnerLocation);
+        //});
         @*function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: @Model.Neighbor.Latitude, lng: @Model.Neighbor.Longitude },
