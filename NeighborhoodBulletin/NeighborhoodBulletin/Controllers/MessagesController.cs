@@ -315,7 +315,7 @@ namespace NeighborhoodBulletin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ZipCode"] = new SelectList(_context.Neighbors, "Id", "ZipCode", message.ZipCode);
+            ViewData["NeighborId"] = new SelectList(_context.Neighbors, "Id", "Id", message.NeighborId);
             return View(message);
         }
 
@@ -324,7 +324,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Text")] Message message)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,ZipCode")] Message message)
         {
             if (id != message.Id)
             {
@@ -338,7 +338,7 @@ namespace NeighborhoodBulletin.Controllers
                     var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
                     message.NeighborId = neighbor.Id;
-                    message.ZipCode = neighbor.ZipCode;
+                    message.NeighborZipCode = neighbor.ZipCode;
                     message.Username = neighbor.Username;
                     message.DateTime = DateTime.Now;
                     _context.Update(message);

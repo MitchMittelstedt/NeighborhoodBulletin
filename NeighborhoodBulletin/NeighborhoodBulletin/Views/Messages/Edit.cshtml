@@ -23,8 +23,8 @@
                 <select asp-for="NeighborId" class="form-control" asp-items="ViewBag.NeighborId"></select>
                 <span asp-validation-for="NeighborId" class="text-danger"></span>
             </div>*@
-            @*@Html.HiddenFor(model => model.ZipCode)
-            <div class="form-group">
+            @Html.HiddenFor(model => model.ZipCode)
+            @*<div class="form-group">
             <label asp-for="ZipCode" class="control-label"></label>
             <select asp-for="ZipCode" class="form-control" asp-items="ViewBag.ZipCode"></select>
             <span asp-validation-for="ZipCode" class="text-danger"></span>       

@@ -47,7 +47,7 @@ namespace NeighborhoodBulletin.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["NeighborId"] = _context.Neighbors.Where(n => n.ApplicationUserId == this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             return View(neighbor);
         }
 
