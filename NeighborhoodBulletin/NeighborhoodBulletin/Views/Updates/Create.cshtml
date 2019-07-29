@@ -13,19 +13,19 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @*<div class="form-group">
-                    <label asp-for="ShopOwnerId" class="control-label"></label>
-                    <select asp-for="ShopOwnerId" class="form-control" asp-items="ViewBag.ShopOwnerId"></select>
-                </div>*@
+            <label asp-for="ShopOwnerId" class="control-label"></label>
+            <select asp-for="ShopOwnerId" class="form-control" asp-items="ViewBag.ShopOwnerId"></select>
+        </div>*@
             <div class="form-group">
                 <label asp-for="ZipCode" class="control-label"></label>
                 <input asp-for="ZipCode" class="form-control" />
                 <span asp-validation-for="ZipCode" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                    <label asp-for="BusinessName" class="control-label"></label>
-                    <input asp-for="BusinessName" class="form-control" />
-                    <span asp-validation-for="BusinessName" class="text-danger"></span>
-                </div>*@
+            <label asp-for="BusinessName" class="control-label"></label>
+            <input asp-for="BusinessName" class="form-control" />
+            <span asp-validation-for="BusinessName" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>
                 <input asp-for="Text" class="form-control" />
@@ -40,6 +40,13 @@
                 <label asp-for="EndDate" class="control-label"></label>
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="HasBarcode" /> @Html.DisplayNameFor(model => model.HasBarcode)
+                    </label>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

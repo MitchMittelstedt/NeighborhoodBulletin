@@ -139,6 +139,18 @@ namespace NeighborhoodBulletin.Controllers
             return scheduledUpdates;
         }
 
+        
+        public string GenerateNumber()
+        {
+            Random random = new Random();
+            string r = "";
+            for (var i = 0; i < 10; i++)
+            {
+                r += random.Next(0, 9).ToString();
+            }
+            return r;
+        }
+
 
         // GET: Updates/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -171,7 +183,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate")] Update update)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate,HasBarcode")] Update update)
         {
             if (ModelState.IsValid)
             {
@@ -184,6 +196,12 @@ namespace NeighborhoodBulletin.Controllers
                     zipCode.ShopOwnerId = shopOwner.Id;
                     zipCode.NonlocalZipCode = update.ZipCode;
                     _context.Add(zipCode);
+                }
+                if(update.HasBarcode == true)
+                {
+                    var randomNos = GenerateNumber();
+                    var url = $"http://www.barcodes4.me/barcode/i2of5/{randomNos}.jpg";
+                    update.Barcode = url;
                 }
                 //update.ZipCode = shopOwner.ZipCode;
                 update.BusinessName = shopOwner.BusinessName;

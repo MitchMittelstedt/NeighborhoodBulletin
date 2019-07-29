@@ -45,8 +45,19 @@
                         borderWidth: 1
                     }]
                 },
+                options: {
+                    scales: {
+                         xAxes: [{
+                            ticks: {
+                                scaleBeginAtZero: true,
+                                beginAtZero: true
+                            }
+                         }]
+                    }
+                }
             });
         }
+
         const zipCodes = [];
         const frequencies = [];
 
@@ -73,6 +84,7 @@
 
         chartIt();
 
+        
     </script>
 
     <h1>your updates</h1>
@@ -92,8 +104,8 @@
             <tbody>
                 <tr>
                     @*<td>
-                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-                        </td>*@
+            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -101,6 +113,12 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
+                    @if (item.Barcode != null)
+                    {
+                        <td class="barcode">
+                            <img src="@item.Barcode" />
+                        </td>
+                    }
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">details</a> |
@@ -121,8 +139,8 @@
             <tbody>
                 <tr>
                     @*<td>
-                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-                        </td>*@
+            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -130,6 +148,12 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
+                    @if (item.Barcode != null)
+                    {
+                        <td class="barcode">
+                            <img src="@item.Barcode" />
+                        </td>
+                    }
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">details</a> |
@@ -156,8 +180,8 @@
             <tbody>
                 <tr>
                     @*<td>
-                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-                        </td>*@
+            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -165,6 +189,13 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
+                    @if (item.Barcode != null)
+                    {
+                        <td class="barcode">
+                            <img src="@item.Barcode" />
+                        </td>
+                    }
+
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">details</a> |
