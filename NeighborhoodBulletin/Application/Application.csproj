@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Chart.js" Version="2.8.0" />
     <PackageReference Include="d3" Version="5.9.7" />
+    <PackageReference Include="Leadtools.Barcode" Version="20.0.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />

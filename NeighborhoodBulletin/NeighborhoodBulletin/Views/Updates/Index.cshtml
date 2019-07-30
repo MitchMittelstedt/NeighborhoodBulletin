@@ -84,7 +84,7 @@
 
         chartIt();
 
-        
+
     </script>
 
     <h1>your updates</h1>
@@ -104,8 +104,8 @@
             <tbody>
                 <tr>
                     @*<td>
-            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-        </td>*@
+                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -139,8 +139,8 @@
             <tbody>
                 <tr>
                     @*<td>
-            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-        </td>*@
+                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -180,8 +180,8 @@
             <tbody>
                 <tr>
                     @*<td>
-            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-        </td>*@
+                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                        </td>*@
 
                     <td class="date-and-zip">
                         posted @Html.DisplayFor(modelItem => item.StartDate) <br />till @Html.DisplayFor(modelItem => item.EndDate) <br />in @Html.DisplayFor(modelItem => item.ZipCode)
@@ -206,7 +206,7 @@
             </tbody>
         </table>
     }
-    @if(Model.AllUpdates.Count == 0)
+    @if (Model.AllUpdates.Count == 0)
     {
         Write("no updates in archive");
     }
@@ -242,7 +242,10 @@
             </tbody>
         </table>
     }
-
+    @if (Model.Messages.Count == 0)
+    {
+        Write("no local posts");
+    }
 
 
     <h2>nonlocal</h2>
@@ -274,7 +277,10 @@
             </tbody>
         </table>
     }
-    
+    @if (Model.MessagesOutsideZipCode.Count == 0)
+    {
+        Write("no nonlocal posts");
+    }
 
 
 
