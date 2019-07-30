@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190715193241_thing")]
-    partial class thing
+    [Migration("20190730153619_SecondMigration")]
+    partial class SecondMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -100,6 +100,27 @@ namespace Domain.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Domain.Barcode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NeighborId");
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.Property<string>("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NeighborId");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("Barcodes");
                 });
 
             modelBuilder.Entity("Domain.Hashtag", b =>
@@ -199,6 +220,23 @@ namespace Domain.Migrations
                     b.ToTable("Neighbors");
                 });
 
+            modelBuilder.Entity("Domain.OutsideShopOwnerZipCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NonlocalZipCode");
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("OutsideShopOwnerZipCodes");
+                });
+
             modelBuilder.Entity("Domain.ShopHashtag", b =>
                 {
                     b.Property<int>("Id")
@@ -274,13 +312,21 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Barcode");
+
                     b.Property<string>("BusinessName");
 
                     b.Property<DateTime>("EndDate");
 
+                    b.Property<bool>("HasBarcode");
+
                     b.Property<int>("ShopOwnerId");
 
+                    b.Property<DateTime>("StartDate");
+
                     b.Property<string>("Text");
+
+                    b.Property<bool>("Valid");
 
                     b.Property<int>("ZipCode");
 
@@ -394,6 +440,19 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Barcode", b =>
+                {
+                    b.HasOne("Domain.Neighbor", "Neighbor")
+                        .WithMany()
+                        .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.Hashtag", b =>
                 {
                     b.HasOne("Domain.Neighbor", "Neighbor")
@@ -423,6 +482,14 @@ namespace Domain.Migrations
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("Domain.OutsideShopOwnerZipCode", b =>
+                {
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.ShopHashtag", b =>

@@ -100,6 +100,27 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Domain.Barcode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NeighborId");
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.Property<string>("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NeighborId");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("Barcodes");
+                });
+
             modelBuilder.Entity("Domain.Hashtag", b =>
                 {
                     b.Property<int>("Id")
@@ -415,6 +436,19 @@ namespace Domain.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Domain.Barcode", b =>
+                {
+                    b.HasOne("Domain.Neighbor", "Neighbor")
+                        .WithMany()
+                        .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Hashtag", b =>

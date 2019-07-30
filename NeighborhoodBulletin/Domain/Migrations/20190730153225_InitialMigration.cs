@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Domain.Migrations
 {
-    public partial class thing : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -284,6 +284,26 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OutsideShopOwnerZipCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    NonlocalZipCode = table.Column<int>(nullable: false),
+                    ShopOwnerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutsideShopOwnerZipCodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OutsideShopOwnerZipCodes_ShopOwners_ShopOwnerId",
+                        column: x => x.ShopOwnerId,
+                        principalTable: "ShopOwners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShopHashtags",
                 columns: table => new
                 {
@@ -341,7 +361,11 @@ namespace Domain.Migrations
                     ZipCode = table.Column<int>(nullable: false),
                     BusinessName = table.Column<string>(nullable: true),
                     Text = table.Column<string>(nullable: true),
-                    EndDate = table.Column<DateTime>(nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    HasBarcode = table.Column<bool>(nullable: false),
+                    Barcode = table.Column<string>(nullable: true),
+                    Valid = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -434,6 +458,11 @@ namespace Domain.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OutsideShopOwnerZipCodes_ShopOwnerId",
+                table: "OutsideShopOwnerZipCodes",
+                column: "ShopOwnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ShopHashtags_ShopOwnerId",
                 table: "ShopHashtags",
                 column: "ShopOwnerId");
@@ -489,6 +518,9 @@ namespace Domain.Migrations
 
             migrationBuilder.DropTable(
                 name: "MessageHashtags");
+
+            migrationBuilder.DropTable(
+                name: "OutsideShopOwnerZipCodes");
 
             migrationBuilder.DropTable(
                 name: "ShopHashtags");

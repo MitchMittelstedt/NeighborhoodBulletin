@@ -20,6 +20,7 @@ namespace Domain
         public DbSet<MessageHashtag> MessageHashtags { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<ZipCode> ZipCodes { get; set; }
+        public DbSet<Barcode> Barcodes { get; set; }
         public DbSet<OutsideShopOwnerZipCode> OutsideShopOwnerZipCodes { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
