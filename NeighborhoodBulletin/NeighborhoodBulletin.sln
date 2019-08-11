@@ -3,22 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeighborhoodBulletin", "NeighborhoodBulletin\NeighborhoodBulletin.csproj", "{63D18018-FE12-488D-A284-45F1E27BA046}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeighborhoodBulletin", "NeighborhoodBulletin\NeighborhoodBulletin.csproj", "{63D18018-FE12-488D-A284-45F1E27BA046}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7E1EC4C3-CB6A-4A14-B5BA-BF50892B378E} = {7E1EC4C3-CB6A-4A14-B5BA-BF50892B378E}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{ACEEC802-9396-485A-8B96-F866796E3D7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{ACEEC802-9396-485A-8B96-F866796E3D7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{7E1EC4C3-CB6A-4A14-B5BA-BF50892B378E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{7E1EC4C3-CB6A-4A14-B5BA-BF50892B378E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9} = {CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ACEEC802-9396-485A-8B96-F866796E3D7F} = {ACEEC802-9396-485A-8B96-F866796E3D7F}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadingBarcodes", "ReadingBarcodes\ReadingBarcodes.csproj", "{B2B3CAB2-7E77-4A13-B1C7-AF7AE04D32CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB8A3178-EF8D-4B29-A425-CAE4A9DF19E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2B3CAB2-7E77-4A13-B1C7-AF7AE04D32CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B3CAB2-7E77-4A13-B1C7-AF7AE04D32CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B3CAB2-7E77-4A13-B1C7-AF7AE04D32CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B3CAB2-7E77-4A13-B1C7-AF7AE04D32CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
