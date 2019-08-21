@@ -18,10 +18,20 @@ using System.Text;
 namespace NeighborhoodBulletin.Controllers
 {
     public class BarcodesController
-    {
+    {    
+        public BarcodesController()
+        {
+            barcodeEngineInstance = new BarcodeEngine();
+            // Requires a license file that unlocks 1D barcode read functionality. 
+            string MY_LICENSE_FILE = @"C:\LEADTOOLS 20\Common\License\leadtools.lic";
+            string MY_DEVELOPER_KEY = System.IO.File.ReadAllText(@"C:\LEADTOOLS 20\Common\License\leadtools.lic.key");
+            RasterSupport.SetLicense(MY_LICENSE_FILE, MY_DEVELOPER_KEY);
+        }
+
         private BarcodeEngine barcodeEngineInstance; // The barcode engine 
         private RasterImage theImage; // The current loaded image 
         private string imageFileName; // Last file name we loaded; this is used in the "Writing Barcodes" tutorial 
+
 
         private void loadImageButton_Click(object sender, EventArgs e)
         {
