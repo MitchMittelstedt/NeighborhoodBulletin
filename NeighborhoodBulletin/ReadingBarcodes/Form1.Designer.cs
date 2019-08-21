@@ -34,28 +34,29 @@
             // 
             // loadImageButton
             // 
-            this.loadImageButton.Location = new System.Drawing.Point(346, 165);
+            this.loadImageButton.Location = new System.Drawing.Point(47, 37);
             this.loadImageButton.Name = "loadImageButton";
             this.loadImageButton.Size = new System.Drawing.Size(127, 23);
             this.loadImageButton.TabIndex = 0;
             this.loadImageButton.Text = "Load image";
             this.loadImageButton.UseVisualStyleBackColor = true;
-            this.loadImageButton.Click += new System.EventHandler(this.Button1_Click);
+            this.loadImageButton.Click += new System.EventHandler(this.loadImageButton_Click);
             // 
             // readBarcodesButton
             // 
-            this.readBarcodesButton.Location = new System.Drawing.Point(346, 222);
+            this.readBarcodesButton.Location = new System.Drawing.Point(47, 88);
             this.readBarcodesButton.Name = "readBarcodesButton";
             this.readBarcodesButton.Size = new System.Drawing.Size(127, 23);
             this.readBarcodesButton.TabIndex = 1;
             this.readBarcodesButton.Text = "Read barcodes";
             this.readBarcodesButton.UseVisualStyleBackColor = true;
+            this.readBarcodesButton.Click += new System.EventHandler(this.readBarcodesButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(225, 147);
             this.Controls.Add(this.readBarcodesButton);
             this.Controls.Add(this.loadImageButton);
             this.Name = "Form1";

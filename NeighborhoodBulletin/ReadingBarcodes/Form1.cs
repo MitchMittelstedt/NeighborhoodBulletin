@@ -12,6 +12,7 @@ using Leadtools;
 using Leadtools.Barcode;
 using System.Windows.Forms;
 
+
 namespace ReadingBarcodes
 {
     public partial class Form1 : Form
@@ -122,9 +123,5 @@ namespace ReadingBarcodes
             }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
