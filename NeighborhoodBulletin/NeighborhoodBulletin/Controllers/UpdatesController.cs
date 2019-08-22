@@ -232,6 +232,7 @@ namespace NeighborhoodBulletin.Controllers
             }
             ViewData["StartDate"] = update.StartDate;
             ViewData["EndDate"] = update.EndDate;
+            ViewData["HasBarcode"] = update.HasBarcode;
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id", update.ShopOwnerId);
             return View(update);
         }
@@ -241,7 +242,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,StartDate,EndDate,ZipCode")] Update update)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,StartDate,EndDate,ZipCode,HasBarcode,Barcode")] Update update)
         {
             if (id != update.Id)
             {

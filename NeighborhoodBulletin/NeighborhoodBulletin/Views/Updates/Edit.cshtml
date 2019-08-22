@@ -19,31 +19,39 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             @*<div class="form-group">
-                    <label asp-for="ShopOwnerId" class="control-label"></label>
-                    <select asp-for="ShopOwnerId" class="form-control" asp-items="ViewBag.ShopOwnerId"></select>
-                    <span asp-validation-for="ShopOwnerId" class="text-danger"></span>
-                </div>*@
+            <label asp-for="ShopOwnerId" class="control-label"></label>
+            <select asp-for="ShopOwnerId" class="form-control" asp-items="ViewBag.ShopOwnerId"></select>
+            <span asp-validation-for="ShopOwnerId" class="text-danger"></span>
+        </div>*@
             @Html.HiddenFor(model => model.ZipCode)
             @*@Html.HiddenFor(model => model.StartDate)*@
             <div class="form-group">
                 Start Date: @Html.TextBoxFor(model => model.StartDate)
                 @*<label asp-for="StartDate" class="control-label"></label>
-                    <input asp-for="StartDate" class="form-control" value=@ViewData["StartDate"] />
-                    <span asp-validation-for="StartDate" class="text-danger"></span>*@
+            <input asp-for="StartDate" class="form-control" value=@ViewData["StartDate"] />
+            <span asp-validation-for="StartDate" class="text-danger"></span>*@
             </div>
             @*@Html.HiddenFor(model => model.EndDate)*@
             <div class="form-group">
                 End Date: @Html.TextBoxFor(model => model.EndDate)
                 @*<label asp-for="EndDate" class="control-label"></label>
-                    <input asp-for="EndDate" class="form-control" value=@ViewData["EndDate"] />
-                    <span asp-validation-for="EndDate" class="text-danger"></span>*@
+            <input asp-for="EndDate" class="form-control" value=@ViewData["EndDate"] />
+            <span asp-validation-for="EndDate" class="text-danger"></span>*@
             </div>
             <div class="form-group">
                 <label asp-for="Text" class="control-label"></label>
                 <input asp-for="Text" class="form-control" />
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
-
+            @Html.HiddenFor(model => model.HasBarcode)
+            @Html.HiddenFor(model => model.Barcode)
+            @*<div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="HasBarcode" /> @Html.DisplayNameFor(model => model.HasBarcode)
+                    </label>
+                </div>
+            </div>*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
