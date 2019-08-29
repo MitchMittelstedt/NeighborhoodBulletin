@@ -201,6 +201,8 @@ namespace NeighborhoodBulletin.Controllers
                 {
                     var randomNos = GenerateNumber();
                     var url = $"http://www.barcodes4.me/barcode/i2of5/{randomNos}.jpg";
+
+                    //use uri to put 
                     update.Barcode = url;
                 }
                 //update.ZipCode = shopOwner.ZipCode;

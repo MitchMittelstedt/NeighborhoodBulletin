@@ -65,6 +65,7 @@ namespace NeighborhoodBulletin.Controllers
             }
         }
 
+        //use this in razor
         private void readBarcodesButton_Click(object sender, EventArgs e)
         {
             if (theImage == null)
