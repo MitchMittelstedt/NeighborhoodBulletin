@@ -43,39 +43,49 @@
 
     @foreach (var item in Model.Messages)
     {
-        <table class="table">
-            @*<thead>
-                </thead>*@
-            <tbody>
-                <tr>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-                        </td>*@
+<table class="table">
+    @*<thead>
+        </thead>*@
+    <tbody>
+        @if (item.Image != null)
+        {        
+            <tr>            
+                <td class="image">                
+                    <img src="@item.Image" style="display:block" />          
+            </tr>
+        }
 
-                    <td class="date-and-zip">
-                        @Html.DisplayFor(modelItem => item.Username) @if (item.NeighborZipCode != Model.Neighbor.ZipCode) { Write("(nonlocal)"); } else { Write("(local)"); } <br /> posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.DateTime)
-                    </td>
-                    <td class="text-content">
-                        @Html.DisplayFor(modelItem => item.Text)
-                    </td>
-                    @*<td class="edit-details-delete">
-                        <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-                        </td>*@
-                    @if (item.NeighborId == Model.Neighbor.Id)
-                    {
-                        <td class="edit-details-delete">
-                            <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-                        </td>
+        <tr>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.ShopOwner.Id)
+                </td>*@
 
-                    }
+            <td class="date-and-zip">
+                @Html.DisplayFor(modelItem => item.Username) @if (item.NeighborZipCode != Model.Neighbor.ZipCode) { Write("(nonlocal)"); } else { Write("(local)"); } <br /> posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
 
-                </tr>
-            </tbody>
-        </table>
+            <td class="text-content">
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            @*<td class="edit-details-delete">
+                <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                </td>*@
+            @if (item.NeighborId == Model.Neighbor.Id)
+            {
+                <td class="edit-details-delete">
+                    <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                </td>
+
+            }
+
+        </tr>
+
+        </tbody>
+    </table>
     }
 
 

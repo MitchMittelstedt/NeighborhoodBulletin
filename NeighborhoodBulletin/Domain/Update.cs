@@ -13,6 +13,7 @@ namespace Domain
         [ForeignKey("ShopOwner")]
         public int ShopOwnerId { get; set; }
         public int ZipCode { get; set; }
+        public int ShopOwnerZipCode { get; set; }
         public virtual ShopOwner ShopOwner { get; set; }
         [Display(Name = "Business Name")]
         public string BusinessName { get; set; }

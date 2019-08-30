@@ -18,6 +18,7 @@ namespace Domain
         public int NeighborZipCode { get; set; }
         public string Username { get; set; }
         public string Text { get; set; }
+        public string Image { get; set; }
         [NotMapped]
         public List<string> Hashtags { get; set; }
         [Display(Name = "Date Posted")]

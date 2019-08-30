@@ -22,8 +22,12 @@ namespace NeighborhoodBulletin.Controllers
         // GET: Hashtags
         public async Task<IActionResult> Index()
         {
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+            var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
             var applicationDbContext = _context.Hashtags.Include(h => h.Neighbor);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await hashtags.ToListAsync());
         }
 
         // GET: Hashtags/Details/5

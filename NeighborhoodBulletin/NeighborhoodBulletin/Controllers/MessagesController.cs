@@ -91,7 +91,7 @@ namespace NeighborhoodBulletin.Controllers
                 {
                     messagesOutsideZipCode.Add(m);
                 }
-                var updatesPerZipCode = _context.Updates.Where(u => u.ZipCode == o.NonLocalZipCode).ToList();
+                var updatesPerZipCode = _context.Updates.Where(u => u.ShopOwnerZipCode == o.NonLocalZipCode).ToList();
                 foreach(var u in updatesPerZipCode)
                 {
                     updatesOutsideZipCode.Add(u);
@@ -170,7 +170,7 @@ namespace NeighborhoodBulletin.Controllers
 
             //}
 
-            var updates = _context.Updates.Where(u => u.ZipCode == neighbor.ZipCode).ToList();
+            var updates = _context.Updates.Where(u => u.ShopOwnerZipCode == neighbor.ZipCode).ToList();
             var updatesToValidate = new List<Update>();
             foreach (var u in updates)
             {
@@ -275,7 +275,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode")] Message message)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,Image")] Message message)
         {
             if (ModelState.IsValid)
             {

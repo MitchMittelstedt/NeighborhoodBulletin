@@ -197,6 +197,7 @@ namespace NeighborhoodBulletin.Controllers
                     zipCode.NonlocalZipCode = update.ZipCode;
                     _context.Add(zipCode);
                 }
+                update.ShopOwnerZipCode = shopOwner.ZipCode;
                 if(update.HasBarcode == true)
                 {
                     var randomNos = GenerateNumber();
@@ -259,6 +260,7 @@ namespace NeighborhoodBulletin.Controllers
                     var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
                     update.ShopOwnerId = shopOwner.Id;
                     update.BusinessName = shopOwner.BusinessName;
+                    update.ShopOwnerZipCode = shopOwner.ZipCode;
 
                     _context.Update(update);
                     await _context.SaveChangesAsync();
