@@ -28,7 +28,7 @@ namespace NeighborhoodBulletin.Controllers
             var membershipRanks = await _context.MembershipRanks.Where(m => m.NeighborId == neighbor.Id).ToListAsync();
             var qRCode = neighbor.QRCode;
             QRCodeViewModel qRCodeViewModel = new QRCodeViewModel();
-            qRCodeViewModel.MembershipRank.Neighbor.QRCode = qRCode;
+            qRCodeViewModel.Neigbor = neighbor;
             qRCodeViewModel.MembershipRanks = membershipRanks;
 
             return View(qRCodeViewModel);
