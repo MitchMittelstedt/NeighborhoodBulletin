@@ -12,6 +12,7 @@ namespace Domain
 
         public DbSet<Neighbor> Neighbors { get; set; }
         public DbSet<ShopOwner> ShopOwners { get; set; }
+        public DbSet<MembershipRank> MembershipRanks { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Update> Updates { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }

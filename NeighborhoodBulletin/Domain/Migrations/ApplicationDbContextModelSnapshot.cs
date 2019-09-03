@@ -149,6 +149,31 @@ namespace Domain.Migrations
                     b.ToTable("Locations");
                 });
 
+            modelBuilder.Entity("Domain.MembershipRank", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Count");
+
+                    b.Property<int>("NeighborId");
+
+                    b.Property<string>("Rank");
+
+                    b.Property<int>("ShopOwnerId");
+
+                    b.Property<double>("TotalSpent");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NeighborId");
+
+                    b.HasIndex("ShopOwnerId");
+
+                    b.ToTable("MembershipRanks");
+                });
+
             modelBuilder.Entity("Domain.Message", b =>
                 {
                     b.Property<int>("Id")
@@ -204,6 +229,8 @@ namespace Domain.Migrations
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
+
+                    b.Property<string>("QRCode");
 
                     b.Property<string>("Username");
 
@@ -308,15 +335,9 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Barcode");
-
-                    b.Property<int>("BarcodeCount");
-
                     b.Property<string>("BusinessName");
 
                     b.Property<DateTime>("EndDate");
-
-                    b.Property<bool>("HasBarcode");
 
                     b.Property<int>("ShopOwnerId");
 
@@ -453,6 +474,19 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Neighbor", "Neighbor")
                         .WithMany()
                         .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Domain.MembershipRank", b =>
+                {
+                    b.HasOne("Domain.Neighbor", "Neighbor")
+                        .WithMany()
+                        .HasForeignKey("NeighborId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.ShopOwner", "ShopOwner")
+                        .WithMany()
+                        .HasForeignKey("ShopOwnerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -219,6 +219,15 @@ namespace NeighborhoodBulletin.Controllers
             return View(messageIndexViewModel);
         }
 
+        //public Task<IActionResult> QRCode()
+        //{
+        //    MessageIndexViewModel messageIndexViewModel = new MessageIndexViewModel();
+        //    var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var neighbor = _context.Neighbors.Where(n => n.ApplicationUserId == userId).FirstOrDefault();
+        //    messageIndexViewModel.QRCode = neighbor.QRCode;
+        //    return View();
+        //}
+
         public List<Update> ValidityCheck(List<Update> updates)
         {
             var newUpdates = new List<Update>();

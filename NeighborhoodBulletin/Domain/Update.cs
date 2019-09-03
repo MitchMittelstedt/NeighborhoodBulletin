@@ -23,9 +23,6 @@ namespace Domain
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
         [Display(Name = "Add barcode?")]
-        public bool HasBarcode { get; set; }
-        public string Barcode { get; set; }
-        public int BarcodeCount { get; set; }
         public bool Valid { get; set; }
 
 

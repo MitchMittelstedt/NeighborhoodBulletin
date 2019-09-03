@@ -32,6 +32,7 @@ namespace NeighborhoodBulletin.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+
         // GET: Neighbors/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -71,14 +72,13 @@ namespace NeighborhoodBulletin.Controllers
                 neighbor.ApplicationUserId = userId;
                 // GEOCODE ZIPCODE INTO LAT AND LON
                 var zipcode = neighbor.ZipCode;
-
-
                 var url = $"https://maps.googleapis.com/maps/api/geocode/json?address={zipcode}&key={APIKey.SecretKey}";
                 var jsonObject = new WebClient().DownloadString(url);
                 //javascript 
                 //Location neighborLocation = new Location();
                 var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
-                neighbor.Hashtags = new List<string>();
+                var codeValue = GenerateNumber();
+                neighbor.QRCode = $"http://www.barcodes4.me/barcode/qr/Neighbor{neighbor.Id}QRCode.png?value={codeValue}";
                 neighbor.Latitude = nLocation.results[0].geometry.location.lat;
                 neighbor.Longitude = nLocation.results[0].geometry.location.lng;
                 _context.Add(neighbor);
@@ -87,6 +87,17 @@ namespace NeighborhoodBulletin.Controllers
             }
             ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", neighbor.ApplicationUserId);
             return View(neighbor);
+        }
+
+        public string GenerateNumber()
+        {
+            Random random = new Random();
+            string r = "";
+            for (var i = 0; i < 10; i++)
+            {
+                r += random.Next(0, 9).ToString();
+            }
+            return r;
         }
 
         // GET: Neighbors/Edit/5

@@ -112,12 +112,6 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @if (item.Barcode != null)
-                    {
-                        <td class="barcode">
-                            <img src="@item.Barcode" />
-                        </td>
-                    }
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">details</a> |
@@ -147,12 +141,6 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @if (item.Barcode != null)
-                    {
-                        <td class="barcode">
-                            <img src="@item.Barcode" />
-                        </td>
-                    }
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">details</a> |
@@ -188,12 +176,6 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @if (item.Barcode != null)
-                    {
-                        <td class="barcode">
-                            <img src="@item.Barcode" />
-                        </td>
-                    }
 
                     <td class="edit-details-delete">
                         <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |

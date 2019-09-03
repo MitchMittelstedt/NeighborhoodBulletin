@@ -183,7 +183,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate,HasBarcode")] Update update)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate")] Update update)
         {
             if (ModelState.IsValid)
             {
@@ -198,14 +198,6 @@ namespace NeighborhoodBulletin.Controllers
                     _context.Add(zipCode);
                 }
                 update.ShopOwnerZipCode = shopOwner.ZipCode;
-                if(update.HasBarcode == true)
-                {
-                    var randomNos = GenerateNumber();
-                    var url = $"http://www.barcodes4.me/barcode/i2of5/{randomNos}.jpg";
-
-                    //use uri to put 
-                    update.Barcode = url;
-                }
                 //update.ZipCode = shopOwner.ZipCode;
                 update.BusinessName = shopOwner.BusinessName;
                 if (update.StartDate > update.EndDate)
@@ -235,7 +227,6 @@ namespace NeighborhoodBulletin.Controllers
             }
             ViewData["StartDate"] = update.StartDate;
             ViewData["EndDate"] = update.EndDate;
-            ViewData["HasBarcode"] = update.HasBarcode;
             ViewData["ShopOwnerId"] = new SelectList(_context.ShopOwners, "Id", "Id", update.ShopOwnerId);
             return View(update);
         }

@@ -13,10 +13,7 @@ namespace Domain
         public int Id { get; set; }
         public int ZipCode { get; set; }
         public string Username { get; set; }
-        [NotMapped]
-        public List<int> ZipCodeSubscriptions { get; set; }
-        [NotMapped]
-        public List<string> BusinessSubscriptions { get; set; }
+        public string QRCode { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
