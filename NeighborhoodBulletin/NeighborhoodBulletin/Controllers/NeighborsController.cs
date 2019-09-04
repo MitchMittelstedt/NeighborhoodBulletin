@@ -78,6 +78,10 @@ namespace NeighborhoodBulletin.Controllers
                 //Location neighborLocation = new Location();
                 var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
                 var codeValue = GenerateNumber();
+                if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(codeValue))
+                {
+                    codeValue = GenerateNumber();
+                }
                 neighbor.QRCodeValue = codeValue;  
                 neighbor.Latitude = nLocation.results[0].geometry.location.lat;
                 neighbor.Longitude = nLocation.results[0].geometry.location.lng;
@@ -96,6 +100,10 @@ namespace NeighborhoodBulletin.Controllers
             for (var i = 0; i < 10; i++)
             {
                 r += random.Next(0, 9).ToString();
+            }
+            if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(r))
+            {
+                GenerateNumber();
             }
             return r;
         }
