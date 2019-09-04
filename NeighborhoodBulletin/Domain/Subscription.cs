@@ -16,7 +16,12 @@ namespace Domain
         [ForeignKey("ShopOwner")]
         public int ShopOwnerId { get; set; }
         public ShopOwner ShopOwner { get; set; }
-        [Display(Name = "Subscribe/Unsubscribegit ")]
+        public int Rank { get; set; }
+        [Display(Name = "Usage Count")]
+        public int UsageCount { get; set; }
+        [Display(Name = "Total Spent")]
+        public double TotalSpent { get; set; }
+        [Display(Name = "Subscribe/Unsubscribe")]
         public bool SubscriptionStatus { get; set; } = true;
     }
 }

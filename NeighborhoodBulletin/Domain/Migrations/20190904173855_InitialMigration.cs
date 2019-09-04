@@ -178,7 +178,7 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ZipCode = table.Column<int>(nullable: false),
                     Username = table.Column<string>(nullable: true),
-                    QRCode = table.Column<string>(nullable: true),
+                    QRCodeValue = table.Column<string>(nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false)
@@ -286,55 +286,6 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Barcodes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    value = table.Column<string>(nullable: true),
-                    ShopOwnerId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Barcodes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Barcodes_ShopOwners_ShopOwnerId",
-                        column: x => x.ShopOwnerId,
-                        principalTable: "ShopOwners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MembershipRanks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Rank = table.Column<string>(nullable: true),
-                    TotalSpent = table.Column<double>(nullable: false),
-                    Count = table.Column<int>(nullable: false),
-                    NeighborId = table.Column<int>(nullable: false),
-                    ShopOwnerId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MembershipRanks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MembershipRanks_Neighbors_NeighborId",
-                        column: x => x.NeighborId,
-                        principalTable: "Neighbors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MembershipRanks_ShopOwners_ShopOwnerId",
-                        column: x => x.ShopOwnerId,
-                        principalTable: "ShopOwners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "OutsideShopOwnerZipCodes",
                 columns: table => new
                 {
@@ -383,6 +334,9 @@ namespace Domain.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     NeighborId = table.Column<int>(nullable: false),
                     ShopOwnerId = table.Column<int>(nullable: false),
+                    Rank = table.Column<int>(nullable: false),
+                    UsageCount = table.Column<int>(nullable: false),
+                    TotalSpent = table.Column<double>(nullable: false),
                     SubscriptionStatus = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -488,24 +442,9 @@ namespace Domain.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Barcodes_ShopOwnerId",
-                table: "Barcodes",
-                column: "ShopOwnerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Hashtags_NeighborId",
                 table: "Hashtags",
                 column: "NeighborId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MembershipRanks_NeighborId",
-                table: "MembershipRanks",
-                column: "NeighborId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MembershipRanks_ShopOwnerId",
-                table: "MembershipRanks",
-                column: "ShopOwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MessageHashtags_MessageId",
@@ -576,16 +515,10 @@ namespace Domain.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Barcodes");
-
-            migrationBuilder.DropTable(
                 name: "Hashtags");
 
             migrationBuilder.DropTable(
                 name: "Locations");
-
-            migrationBuilder.DropTable(
-                name: "MembershipRanks");
 
             migrationBuilder.DropTable(
                 name: "MessageHashtags");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190903210241_InitialMigration")]
+    [Migration("20190904173855_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,23 +102,6 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Domain.Barcode", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ShopOwnerId");
-
-                    b.Property<string>("value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShopOwnerId");
-
-                    b.ToTable("Barcodes");
-                });
-
             modelBuilder.Entity("Domain.Hashtag", b =>
                 {
                     b.Property<int>("Id")
@@ -149,31 +132,6 @@ namespace Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("Domain.MembershipRank", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Count");
-
-                    b.Property<int>("NeighborId");
-
-                    b.Property<string>("Rank");
-
-                    b.Property<int>("ShopOwnerId");
-
-                    b.Property<double>("TotalSpent");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NeighborId");
-
-                    b.HasIndex("ShopOwnerId");
-
-                    b.ToTable("MembershipRanks");
                 });
 
             modelBuilder.Entity("Domain.Message", b =>
@@ -232,7 +190,7 @@ namespace Domain.Migrations
 
                     b.Property<double>("Longitude");
 
-                    b.Property<string>("QRCode");
+                    b.Property<string>("QRCodeValue");
 
                     b.Property<string>("Username");
 
@@ -318,9 +276,15 @@ namespace Domain.Migrations
 
                     b.Property<int>("NeighborId");
 
+                    b.Property<int>("Rank");
+
                     b.Property<int>("ShopOwnerId");
 
                     b.Property<bool>("SubscriptionStatus");
+
+                    b.Property<double>("TotalSpent");
+
+                    b.Property<int>("UsageCount");
 
                     b.HasKey("Id");
 
@@ -463,32 +427,11 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Barcode", b =>
-                {
-                    b.HasOne("Domain.ShopOwner", "ShopOwner")
-                        .WithMany()
-                        .HasForeignKey("ShopOwnerId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Domain.Hashtag", b =>
                 {
                     b.HasOne("Domain.Neighbor", "Neighbor")
                         .WithMany()
                         .HasForeignKey("NeighborId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.MembershipRank", b =>
-                {
-                    b.HasOne("Domain.Neighbor", "Neighbor")
-                        .WithMany()
-                        .HasForeignKey("NeighborId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Domain.ShopOwner", "ShopOwner")
-                        .WithMany()
-                        .HasForeignKey("ShopOwnerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

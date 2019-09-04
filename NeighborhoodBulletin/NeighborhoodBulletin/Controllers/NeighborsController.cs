@@ -78,7 +78,7 @@ namespace NeighborhoodBulletin.Controllers
                 //Location neighborLocation = new Location();
                 var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
                 var codeValue = GenerateNumber();
-                neighbor.QRCode = $"http://www.barcodes4.me/barcode/qr/Neighbor{neighbor.Id}QRCode.png?value={codeValue}";
+                neighbor.QRCodeValue = codeValue;  
                 neighbor.Latitude = nLocation.results[0].geometry.location.lat;
                 neighbor.Longitude = nLocation.results[0].geometry.location.lng;
                 _context.Add(neighbor);

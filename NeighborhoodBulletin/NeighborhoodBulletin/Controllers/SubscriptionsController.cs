@@ -148,6 +148,10 @@ namespace NeighborhoodBulletin.Controllers
                 }
             }
 
+            ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
+            shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+            shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModel);
+
             foreach (ShopOwner shopOwner in shopOwnersList)
             {
                 ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModelForShopOwner = new ShopOwnerSubscriptionViewModel();

@@ -5,15 +5,27 @@
 @{
     ViewData["Title"] = "Index";
 }
+
 <br />
 <br />
-<br />
-<br />
+<h2>Your QR Code</h2>
+
+<p>
+    @foreach (var item in Model.Select(m => m.Neighbor))
+    {
+        <img src="http://www.barcodes4.me/barcode/qr/Neighbor{@item.Id}QRCode.png?value={@item.QRCodeValue}" />
+    }
+</p>
+
+
 <h2>Business of Interest in your Zip Code</h2>
 
 @*<p>
         <a asp-action="Create">Create New</a>
     </p>*@
+<p>
+    <a asp-action="Create"></a>
+</p>
 <table class="table">
 
     <tbody>
@@ -25,45 +37,61 @@
 
                 if (item.ShopOwnerIds.Contains(item.ShopOwner.Id))
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShopOwner.Address)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShopOwner.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShopOwner.State)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShopOwner.ZipCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShopOwner.BusinessName)
-                    </td>
-                    <td>
-                        @if (item.Subscribed == true)
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.State)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.ZipCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShopOwner.BusinessName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.TotalSpent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.UsageCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.Rank)
+                        </td>
+                        <td>
+                            @if (item.Subscribed == true)
 
-                        {
-                            @Html.ActionLink("Unsubscribe", "Delete", new { id = item.Subscription.Id })
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.ShopOwner.Id })
-                        }
+                            {
+                                @Html.ActionLink("Unsubscribe", "Delete", new { id = item.Subscription.Id })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.ShopOwner.Id })
+                            }
 
 
-                    </td>
-                    @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                        </td>
+                        @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                            </td>*@
+                        <td>
+                        </td>
+                        @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>*@
+                        @*<td>
+                            <a asp-action="Edit" asp-route-id="@item.Id"></a>
+                            <a asp-action="Details" asp-route-id="@item.Id"></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id"></a>
                         </td>*@
-                    @*<td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>*@
-                </tr>
+                    </tr>
                 }
             }
 
@@ -75,8 +103,9 @@
 
 @*<p>
         <a asp-action="Create">Create New</a>
-    </p>*@
-
+    </p>*@<p>
+    <a asp-action="Create"></a>
+</p>
 @*@if() { }*@
 <table class="table">
 
@@ -88,45 +117,61 @@
 
                 if (item.NonlocalShopOwnerIds.Contains(item.NonlocalShopOwner.Id))
                 {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NonlocalShopOwner.Address)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NonlocalShopOwner.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NonlocalShopOwner.State)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NonlocalShopOwner.ZipCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NonlocalShopOwner.BusinessName)
-                    </td>
-                    <td>
-                        @if (item.Subscribed == true)
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NonlocalShopOwner.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NonlocalShopOwner.City)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NonlocalShopOwner.State)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NonlocalShopOwner.ZipCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.NonlocalShopOwner.BusinessName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.TotalSpent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.UsageCount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Subscription.Rank)
+                        </td>
+                        <td>
+                            @if (item.Subscribed == true)
 
-                        {
-                            @Html.ActionLink("Unsubscribe", "Delete", new { id = item.Subscription.Id })
-                        }
-                        else
-                        {
-                            @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.NonlocalShopOwner.Id })
-                        }
+                            {
+                                @Html.ActionLink("Unsubscribe", "Delete", new { id = item.Subscription.Id })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.NonlocalShopOwner.Id })
+                            }
 
 
-                    </td>
-                    @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                        </td>
+                        @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
+                        @*<td>
+                                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                            </td>*@
+                        <td>
+                        </td>
+                        @*<td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>*@
+                        @*<td>
+                            <a asp-action="Edit" asp-route-id="@item.Id"></a>
+                            <a asp-action="Details" asp-route-id="@item.Id"></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id"></a>
                         </td>*@
-                    @*<td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>*@
-                </tr>
+                    </tr>
                 }
             }
 
