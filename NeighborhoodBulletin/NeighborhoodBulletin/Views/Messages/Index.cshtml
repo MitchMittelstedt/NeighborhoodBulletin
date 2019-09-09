@@ -166,7 +166,7 @@
                     @if (item.BarcodeValue != null)
                     {
                         <td class="barcode">
-                            <a href="http://www.barcodes4.me/barcode/c39/{@item.BarcodeValue}_{@Model.Neighbor.Id}_{@Model.ShopOwner.Id}.png">view barcode</a>
+                            <a href="http://www.barcodes4.me/barcode/c39/@item.BarcodeValue@Model.Neighbor.Id@Model.ShopOwner.Id@@.png">view barcode</a>
                         </td>
                     }
                 </tr>
