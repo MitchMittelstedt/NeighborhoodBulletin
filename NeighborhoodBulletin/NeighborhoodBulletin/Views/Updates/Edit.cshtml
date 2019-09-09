@@ -43,6 +43,8 @@
                 <input asp-for="Text" class="form-control" />
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
+            @Html.HiddenFor(model => model.HasBarcode)
+            @Html.HiddenFor(model => model.BarcodeValue)
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>

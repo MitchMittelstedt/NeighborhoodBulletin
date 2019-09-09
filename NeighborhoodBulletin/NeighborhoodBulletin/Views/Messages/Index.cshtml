@@ -43,49 +43,42 @@
 
     @foreach (var item in Model.Messages)
     {
-<table class="table">
-    @*<thead>
-        </thead>*@
-    <tbody>
-        @if (item.Image != null)
-        {        
-            <tr>            
-                <td class="image">                
-                    <img src="@item.Image" style="display:block" />          
-            </tr>
-        }
+        <table class="table">
+            <tbody>
+                @if (item.Image != null)
+                {
+                    <tr>
+                        <td class="image">
+                            <img src="@item.Image" style="display:block" />
+                    </tr>
+                }
 
-        <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-                </td>*@
+                <tr>
+                    <td class="date-and-zip">
+                        @Html.DisplayFor(modelItem => item.Username) @if (item.NeighborZipCode != Model.Neighbor.ZipCode) { Write("(nonlocal)"); } else { Write("(local)"); } <br /> posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
 
-            <td class="date-and-zip">
-                @Html.DisplayFor(modelItem => item.Username) @if (item.NeighborZipCode != Model.Neighbor.ZipCode) { Write("(nonlocal)"); } else { Write("(local)"); } <br /> posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.DateTime)
-            </td>
+                    <td class="text-content">
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    @if (item.NeighborId == Model.Neighbor.Id)
+                    {
+                        <td class="edit-details-delete">
+                            <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
+                        </td>
 
-            <td class="text-content">
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            @*<td class="edit-details-delete">
-                <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-                </td>*@
-            @if (item.NeighborId == Model.Neighbor.Id)
-            {
-                <td class="edit-details-delete">
-                    <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-                </td>
+                    }
 
-            }
+                </tr>
 
-        </tr>
-
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    }
+    @if (Model.MessagesOutsideZipCode.Count == 0)
+    {
+        Write("no local messages to display");
     }
 
 
@@ -108,11 +101,6 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @*<td class="edit-details-delete">
-                        <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-                        </td>*@
                     @if (item.NeighborId == Model.Neighbor.Id)
                     {
                         <td class="edit-details-delete">
@@ -127,51 +115,47 @@
             </tbody>
         </table>
     }
-
+    @if (Model.MessagesOutsideZipCode.Count == 0)
+    {
+        Write("no nonlocal messages to display");
+    }
 
     <h2 id="header">local business updates</h2>
 
     @foreach (var item in Model.Updates)
     {
         <table class="table">
-            @*<thead>
-                </thead>*@
             <tbody>
                 <tr>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-        </td>*@
-
                     <td class="date-and-zip">
                         @Html.DisplayFor(modelItem => item.BusinessName) <br />posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.StartDate) <br /> till @Html.DisplayFor(modelItem => item.EndDate)
                     </td>
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @*<td class="edit-details-delete">
-            <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-            <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-        </td>*@
+                    @if (item.BarcodeValue != null)
+                    {
+                        <td class="barcode">
+                            <a href="http://www.barcodes4.me/barcode/c39/@item.BarcodeValue@Model.Neighbor.Id@item.ShopOwner.Id@@.png">view barcode</a>
+                        </td>
+                    }
 
                 </tr>
             </tbody>
         </table>
     }
-
+    @if (Model.Updates.Count == 0)
+    {
+        Write("no local updates to display");
+    }
 
     <h2 id="header">nonlocal business updates</h2>
 
     @foreach (var item in Model.UpdatesOutsideZipCode)
     {
         <table class="table">
-            @*<thead>
-                </thead>*@
             <tbody>
                 <tr>
-                    @*<td>
-            @Html.DisplayFor(modelItem => item.ShopOwner.Id)
-        </td>*@
 
                     <td class="date-and-zip">
                         @Html.DisplayFor(modelItem => item.BusinessName) <br />posted in @Html.DisplayFor(modelItem => item.ZipCode) <br /> on @Html.DisplayFor(modelItem => item.StartDate) <br /> till @Html.DisplayFor(modelItem => item.EndDate)
@@ -179,17 +163,17 @@
                     <td class="text-content">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
-                    @*<td class="edit-details-delete">
-            <a asp-action="Edit" asp-route-id="@item.Id">edit</a> |
-            <a asp-action="Details" asp-route-id="@item.Id">details</a> |
-            <a asp-action="Delete" asp-route-id="@item.Id">delete</a>
-        </td>*@
-
+                    @if (item.BarcodeValue != null)
+                    {
+                        <td class="barcode">
+                            <a href="http://www.barcodes4.me/barcode/c39/{@item.BarcodeValue}_{@Model.Neighbor.Id}_{@Model.ShopOwner.Id}.png">view barcode</a>
+                        </td>
+                    }
                 </tr>
             </tbody>
         </table>
     }
-    @if(Model.UpdatesOutsideZipCode.Count == 0)
+    @if (Model.UpdatesOutsideZipCode.Count == 0)
     {
         Write("no nonlocal updates to display");
     }
@@ -207,16 +191,6 @@
             map = new google.maps.Map(document.getElementById('map'), myOptions);
             ShopOwnerMarkers();
         }
-        @*var labels = [];
-        var labelIndex = 0;
-
-        @foreach(var item in Model.ShopOwners)
-        {
-            <text>
-            var businessName = @item.BusinessName;
-            labels.push(businessName);
-            </text>
-        }*@
 
 
         // Function for adding a marker to the page.
@@ -239,35 +213,6 @@
                 </text>
             }
         }
-
-        //shopOwners.forEach(element =>
-        //{
-        //    var latitude = element.Latitude;
-        //    var longitude = element.Longitude;
-        //    shopOwnerlocation = new google.maps.LatLng(latitude, longitude);
-        //    addMarker(shopOwnerLocation);
-        //});
-        @*function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: @Model.Neighbor.Latitude, lng: @Model.Neighbor.Longitude },
-                zoom: 12
-            });
-        };*@
-        //function addMarker(location, map)
-        //{
-
-        //}
-        //var latLng = new google.maps.LatLng(s.lat, s.lng);
-        //var mapOptions =
-        //var marker = new google.maps.Marker({
-        //    position: latLng,
-        //    map: map,
-        //    title: 'Subscriptions in your Zip Code'
-        //marker.SetMap(map);
-
-
-
-        //}
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDkLcqZqMPi_tWPvqGyBKBCBfuOKC8gvw&callback=initMap" async defer></script>

@@ -13,7 +13,6 @@ namespace Domain
         public int Id { get; set; }
         public int ZipCode { get; set; }
         public string Username { get; set; }
-        public string QRCodeValue { get; set; }
         [ForeignKey("ApplicationUser")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }

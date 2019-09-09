@@ -16,11 +16,25 @@ namespace Domain
         [ForeignKey("ShopOwner")]
         public int ShopOwnerId { get; set; }
         public ShopOwner ShopOwner { get; set; }
-        public int Rank { get; set; }
+        public int Rank {
+            get {
+                if(TotalSpent > 300)
+                {
+                    return 3;
+                }else if(TotalSpent > 200)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
         [Display(Name = "Usage Count")]
         public int UsageCount { get; set; }
         [Display(Name = "Total Spent")]
-        public double TotalSpent { get; set; }
+        public int TotalSpent { get; set; }
         [Display(Name = "Subscribe/Unsubscribe")]
         public bool SubscriptionStatus { get; set; } = true;
     }

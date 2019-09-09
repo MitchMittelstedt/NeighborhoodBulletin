@@ -37,6 +37,7 @@ namespace NeighborhoodBulletin.Controllers
             var nonlocalShopOwnerIds = new List<int?>();
             var hashtags = _context.Hashtags.Where(h => h.NeighborId == neighbor.Id);
             var subscriptions = await _context.Subscriptions.Where(s => s.NeighborId == neighbor.Id).ToListAsync();
+            var url = $"http://www.barcodes4.me/barcode/qr/Neighbor{neighbor.Id}QRCode.png?value={neighbor.Id}";
             foreach (var h in hashtags)
             {
                 //adds shopOwnerId of the shopHashtag whose Text matches one of the neighbor's Hashtags to the list of shopOwnerIds if it doesn't already exist there.
@@ -150,6 +151,7 @@ namespace NeighborhoodBulletin.Controllers
 
             ShopOwnerSubscriptionViewModel shopOwnerSubscriptionViewModel = new ShopOwnerSubscriptionViewModel();
             shopOwnerSubscriptionViewModel.Neighbor = neighbor;
+            shopOwnerSubscriptionViewModel.QRCodeURL = url;
             shopOwnerSubscriptionViewModelList.Add(shopOwnerSubscriptionViewModel);
 
             foreach (ShopOwner shopOwner in shopOwnersList)

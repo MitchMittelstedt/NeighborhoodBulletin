@@ -18,5 +18,6 @@ namespace NeighborhoodBulletin.Models
         public bool? Subscribed { get; set; }
         public List<int> ShopOwnerIds { get; set; }
         public List<int?> NonlocalShopOwnerIds { get; set; }
+        public string QRCodeURL { get; set; }
     }
 }

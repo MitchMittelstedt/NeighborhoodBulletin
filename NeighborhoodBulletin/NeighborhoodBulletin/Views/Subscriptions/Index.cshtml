@@ -10,22 +10,22 @@
 <br />
 <h2>Your QR Code</h2>
 
-<p>
-    @foreach (var item in Model.Select(m => m.Neighbor))
+@foreach (var item in Model)
+{
+    if (item.QRCodeURL != null)
     {
-        <img src="http://www.barcodes4.me/barcode/qr/Neighbor{@item.Id}QRCode.png?value={@item.QRCodeValue}" />
+        <p>
+            <img src="@item.QRCodeURL" />
+        </p>
     }
-</p>
+
+}
+
 
 
 <h2>Business of Interest in your Zip Code</h2>
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@
-<p>
-    <a asp-action="Create"></a>
-</p>
+
 <table class="table">
 
     <tbody>
@@ -73,24 +73,10 @@
                                 @Html.ActionLink("Subscribe", "Create", new { subscription = item.Subscription, shopOwnerId = item.ShopOwner.Id })
                             }
 
-
                         </td>
                         @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
-                            </td>*@
                         <td>
                         </td>
-                        @*<td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </td>*@
-                        @*<td>
-                            <a asp-action="Edit" asp-route-id="@item.Id"></a>
-                            <a asp-action="Details" asp-route-id="@item.Id"></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id"></a>
-                        </td>*@
                     </tr>
                 }
             }
@@ -101,9 +87,7 @@
 
 <h2>Business of Interest beyond your Zip Code</h2>
 
-@*<p>
-        <a asp-action="Create">Create New</a>
-    </p>*@<p>
+<p>
     <a asp-action="Create"></a>
 </p>
 @*@if() { }*@
@@ -156,21 +140,8 @@
 
                         </td>
                         @Html.HiddenFor(modelItem => item.Neighbor.ApplicationUser.Id)
-                        @*<td>
-                                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
-                            </td>*@
                         <td>
                         </td>
-                        @*<td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                            </td>*@
-                        @*<td>
-                            <a asp-action="Edit" asp-route-id="@item.Id"></a>
-                            <a asp-action="Details" asp-route-id="@item.Id"></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id"></a>
-                        </td>*@
                     </tr>
                 }
             }

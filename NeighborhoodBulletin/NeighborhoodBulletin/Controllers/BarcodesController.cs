@@ -36,18 +36,18 @@ namespace NeighborhoodBulletin.Controllers
         private void loadImageButton_Click(object sender, EventArgs e)
         {
             string fileName = @"C:\Users\Public\Documents\LEADTOOLS Images\Barcode1.tif";
-            // Or uncomment the following to load your own file 
-            //using(OpenFileDialog dlg = new OpenFileDialog()) 
-            //{ 
-            //   if(dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK) 
-            //   { 
-            //      fileName = dlg.FileName; 
-            //   } 
-            //   else 
-            //   { 
-            //      return; 
-            //   } 
-            //} 
+            //Or uncomment the following to load your own file
+            //using (OpenFileDialog dlg = new OpenFileDialog())
+            //{
+            //    if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            //    {
+            //        fileName = dlg.FileName;
+            //    }
+            //    else
+            //    {
+            //        return;
+            //    }
+            //}
 
             // Load the image 
             using (RasterCodecs codecs = new RasterCodecs())

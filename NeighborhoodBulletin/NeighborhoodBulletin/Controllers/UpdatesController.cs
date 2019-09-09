@@ -148,6 +148,10 @@ namespace NeighborhoodBulletin.Controllers
             {
                 r += random.Next(0, 9).ToString();
             }
+            if (_context.Updates.Select(u => u.BarcodeValue).Contains(r))
+            {
+                GenerateNumber();
+            }
             return r;
         }
 
@@ -183,7 +187,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate")] Update update)
+        public async Task<IActionResult> Create([Bind("Id,Text,ZipCode,StartDate,EndDate,HasBarcode")] Update update)
         {
             if (ModelState.IsValid)
             {
@@ -200,6 +204,11 @@ namespace NeighborhoodBulletin.Controllers
                 update.ShopOwnerZipCode = shopOwner.ZipCode;
                 //update.ZipCode = shopOwner.ZipCode;
                 update.BusinessName = shopOwner.BusinessName;
+                if (update.HasBarcode)
+                {
+                    var barcodeValue = GenerateNumber();
+                    update.BarcodeValue = barcodeValue;
+                }
                 if (update.StartDate > update.EndDate)
                 {
                     return View();
@@ -236,7 +245,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,StartDate,EndDate,ZipCode,HasBarcode,Barcode")] Update update)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Text,StartDate,EndDate,ZipCode,HasBarcode,BarcodeValue")] Update update)
         {
             if (id != update.Id)
             {

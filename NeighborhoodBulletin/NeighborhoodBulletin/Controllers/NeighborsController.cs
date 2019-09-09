@@ -77,12 +77,12 @@ namespace NeighborhoodBulletin.Controllers
                 //javascript 
                 //Location neighborLocation = new Location();
                 var nLocation = JsonConvert.DeserializeObject<RootObject>(jsonObject);
-                var codeValue = GenerateNumber();
-                if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(codeValue))
-                {
-                    codeValue = GenerateNumber();
-                }
-                neighbor.QRCodeValue = codeValue;  
+                //var codeValue = GenerateNumber();
+                //if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(codeValue))
+                //{
+                //    codeValue = GenerateNumber();
+                //}
+                //neighbor.QRCodeValue = codeValue;  
                 neighbor.Latitude = nLocation.results[0].geometry.location.lat;
                 neighbor.Longitude = nLocation.results[0].geometry.location.lng;
                 _context.Add(neighbor);
@@ -93,20 +93,20 @@ namespace NeighborhoodBulletin.Controllers
             return View(neighbor);
         }
 
-        public string GenerateNumber()
-        {
-            Random random = new Random();
-            string r = "";
-            for (var i = 0; i < 10; i++)
-            {
-                r += random.Next(0, 9).ToString();
-            }
-            if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(r))
-            {
-                GenerateNumber();
-            }
-            return r;
-        }
+        //public string GenerateNumber()
+        //{
+        //    Random random = new Random();
+        //    string r = "";
+        //    for (var i = 0; i < 10; i++)
+        //    {
+        //        r += random.Next(0, 9).ToString();
+        //    }
+        //    if (_context.Neighbors.Select(n => n.QRCodeValue).Contains(r))
+        //    {
+        //        GenerateNumber();
+        //    }
+        //    return r;
+        //}
 
         // GET: Neighbors/Edit/5
         public async Task<IActionResult> Edit(int? id)
