@@ -6,13 +6,10 @@ using System.Text;
 
 namespace Domain
 {
-    class SingleUseCoupon
+    public class SingleUseCoupon
     {
         [Key]
         public int Id { get; set; }
-        [ForeignKey("ShopOwnerId")]
-        public int ShopOwnerId { get; set; }
-        public ShopOwner ShopOwner { get; set; }
         public int Value { get; set; }
     }
 }
