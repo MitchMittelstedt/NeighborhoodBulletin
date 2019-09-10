@@ -135,8 +135,14 @@
                     </td>
                     @if (item.BarcodeValue != null)
                     {
+                        string str1 = "http://www.barcodes4.me/barcode/c39/" + @item.BarcodeValue;
+                        string str2 = "_" + @Model.Neighbor.Id;
+                        string str3 = "_" + item.ShopOwner.Id;
+                        string str4 = ".png";
+
+
                         <td class="barcode">
-                            <a href="http://www.barcodes4.me/barcode/c39/@item.BarcodeValue@@_@Model.Neighbor.Id@@_@item.ShopOwner.Id@@.png">view barcode</a>
+                            <a href=@str1@str2@str3@str4>view barcode</a>
                         </td>
                     }
 
@@ -165,8 +171,14 @@
                     </td>
                     @if (item.BarcodeValue != null)
                     {
+                        string str1 = "http://www.barcodes4.me/barcode/c39/" + @item.BarcodeValue;
+                        string str2 = "_" + @Model.Neighbor.Id;
+                        string str3 = "_" + item.ShopOwner.Id;
+                        string str4 = ".png";
+
+
                         <td class="barcode">
-                            <a href="http://www.barcodes4.me/barcode/c39/@item.BarcodeValue@@_@Model.Neighbor.Id@@_@Model.ShopOwner.Id@@.png">view barcode</a>
+                            <a href=@str1@str2@str3@str4>view barcode</a>
                         </td>
                     }
                 </tr>
