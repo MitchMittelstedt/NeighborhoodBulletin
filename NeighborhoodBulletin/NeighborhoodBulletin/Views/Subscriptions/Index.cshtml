@@ -54,13 +54,13 @@
                             @Html.DisplayFor(modelItem => item.ShopOwner.BusinessName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Subscription.TotalSpent)
+                            $@Html.DisplayFor(modelItem => item.Subscription.TotalSpent) spent total
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Subscription.UsageCount)
+                            @Html.DisplayFor(modelItem => item.Subscription.UsageCount) uses
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Subscription.Rank)
+                            rank @Html.DisplayFor(modelItem => item.Subscription.Rank)
                         </td>
                         <td>
                             @if (item.Subscribed == true)
