@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Domain;
+using System.Security.Claims;
 
 namespace NeighborhoodBulletin.Controllers
 {
@@ -53,10 +54,23 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Value")] SingleUseCoupon singleUseCoupon)
+        public async Task<IActionResult> Create([Bind("Id,Value,LastSpent")] SingleUseCoupon singleUseCoupon)
         {
             if (ModelState.IsValid)
             {
+                var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var shopOwner = _context.ShopOwners.Where(s => s.ApplicationUserId == userId).FirstOrDefault();
+                var neighborIds = _context.Neighbors.Select(n => n.Id).ToList();
+                if (neighborIds.Contains(singleUseCoupon.Value))
+                {
+                    var neighborId = singleUseCoupon.Value;
+                    var subscription = _context.Subscriptions.Where(s => s.NeighborId == neighborId).FirstOrDefault();
+                    subscription.UsageCount++;
+                    subscription.TotalSpent += singleUseCoupon.LastSpent;
+                }
+                var singleUseCouponValues = _context.SingleUseCoupons.Select(s => s.Value).ToList();
+                
+
                 _context.Add(singleUseCoupon);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

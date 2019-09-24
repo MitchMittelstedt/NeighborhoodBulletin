@@ -34,7 +34,7 @@ namespace Domain
         [Display(Name = "Usage Count")]
         public int UsageCount { get; set; }
         [Display(Name = "Total Spent")]
-        public int TotalSpent { get; set; }
+        public int? TotalSpent { get; set; }
         [Display(Name = "Subscribe/Unsubscribe")]
         public bool SubscriptionStatus { get; set; } = true;
     }
