@@ -69,7 +69,10 @@ namespace NeighborhoodBulletin.Controllers
                     subscription.TotalSpent += singleUseCoupon.LastSpent;
                 }
                 var singleUseCouponValues = _context.SingleUseCoupons.Select(s => s.Value).ToList();
-                
+                if (singleUseCouponValues.Contains(singleUseCoupon.Value))
+                {
+                    throw new Exception();
+                }
 
                 _context.Add(singleUseCoupon);
                 await _context.SaveChangesAsync();
