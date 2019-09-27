@@ -68,14 +68,20 @@ namespace NeighborhoodBulletin.Controllers
                     subscription.UsageCount++;
                     subscription.TotalSpent += singleUseCoupon.LastSpent;
                 }
+                else
+                {
+                    throw new Exception();
+                }
                 var singleUseCouponValues = _context.SingleUseCoupons.Select(s => s.Value).ToList();
                 if (singleUseCouponValues.Contains(singleUseCoupon.Value))
                 {
                     throw new Exception();
                 }
-
-                _context.Add(singleUseCoupon);
-                await _context.SaveChangesAsync();
+                else
+                {
+                    _context.Add(singleUseCoupon);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(singleUseCoupon);
