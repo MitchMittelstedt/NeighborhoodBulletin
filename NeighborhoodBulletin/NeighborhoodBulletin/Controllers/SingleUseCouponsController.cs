@@ -76,7 +76,7 @@ namespace NeighborhoodBulletin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IFormFile file)
+        public async Task<IActionResult> Create([Bind("LastSpent")] SingleUseCoupon singleUseCoupon, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -91,6 +91,7 @@ namespace NeighborhoodBulletin.Controllers
                 }
                 
                 var neighborIds = _context.Neighbors.Select(n => n.Id).ToList();
+                var singleUseCouponValues = _context.SingleUseCoupons.Select(s => s.Value).ToList();
 
                 using (RasterCodecs codecs = new RasterCodecs())
                 {
@@ -124,8 +125,17 @@ namespace NeighborhoodBulletin.Controllers
                         var neighborId = sb[2];
                         var subscription = _context.Subscriptions.Where(s => s.NeighborId == neighborId).FirstOrDefault();
                         subscription.UsageCount++;
-                        //subscription.TotalSpent += 
+                        subscription.TotalSpent += singleUseCoupon.LastSpent;
                     }
+                    if (singleUseCouponValues.Contains(sb[2]))
+                    {
+                        throw new Exception();
+                    }
+                    else
+                    {
+                        _context.Add(singleUseCoupon);
+                        await _context.SaveChangesAsync();
+                    };
                 }
                 //if (neighborIds.Contains(singleUseCoupon.Value))
                 //{

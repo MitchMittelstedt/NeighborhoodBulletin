@@ -16,6 +16,11 @@
             @using (Html.BeginForm("Create", "SingleUseCoupons", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 <input type="file" name="file" id="myFile">
+
+                <label asp-for="LastSpent" class="control-label" />
+                <input asp-for="LastSpent" class="form-control" />
+                <span asp-validation-for="LastSpent" class="text-danger"></span>
+
                 <input type="submit" value="Create" class="btn btn-default" />
             }
 
